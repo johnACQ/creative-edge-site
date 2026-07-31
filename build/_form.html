@@ -1,0 +1,63 @@
+<form class="form-card" id="lead" method="POST" action="#" novalidate>
+  <div class="fc-h">Book your free design consult</div>
+  <div class="fc-s">Takes 20 seconds. We call you back the same working day.</div>
+  <input class="hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+  <div class="fc-prog"><i class="on" id="pg1"></i><i id="pg2"></i></div>
+
+  <div class="fc-step on" id="step1">
+    <div class="fc-q">What are you looking to build?</div>
+    <select name="reason" required>
+      <option value="" disabled selected>Choose one…</option>
+      <option>Full backyard redo</option>
+      <option>Pool and deck</option>
+      <option>Retaining walls and hardscape</option>
+      <option>Outdoor living space (kitchen, firepit, lighting)</option>
+      <option>Landscape package for a new build</option>
+      <option>Not sure yet, I want ideas</option>
+    </select>
+
+    <div class="fc-q">How soon do you want it done?</div>
+    <select name="timeframe" required>
+      <option value="" disabled selected>Choose one…</option>
+      <option>As soon as possible</option>
+      <option>In the next month</option>
+      <option>This season</option>
+    </select>
+
+    <div class="fc-q">Where's the property?</div>
+    <select name="town" required>
+      <option value="" disabled selected>Choose your town…</option>
+      <option>Vernon</option>
+      <option>Coldstream</option>
+      <option>Lavington</option>
+      <option>Armstrong</option>
+      <option>Enderby</option>
+      <option>Lumby</option>
+      <option>Salmon Arm</option>
+      <option>Sicamous</option>
+      <option>Other / nearby</option>
+    </select>
+
+    <button class="fc-btn" type="button" id="fcNext">Continue</button>
+    <div class="fc-err" id="fcErr">Pick an option for each question to continue.</div>
+    <div class="fc-micro">20 years in outdoor living · 2 year limited warranty<!-- INSURED-CLAIM-REMOVED: restore ' · Fully insured' the day the COI is on file. He offered it at intake Jul 2026 and never sent it. Do not print it before then. -->
+      <span style="display:block;margin-top:8px;opacity:.85;font-size:.92em;line-height:1.5">By submitting you agree to receive calls, texts and emails from Creative Edge Landscaping about your project. Message and data rates may apply. Reply STOP to opt out.</span>
+    </div>
+  </div>
+
+  <div class="fc-step" id="step2">
+    <button type="button" class="fc-back" id="fcBack">&larr; Back</button>
+    <div class="fc-q" style="margin-top:0">Last step, who should we call?</div>
+    <label for="name">Your name</label>
+    <input id="name" name="name" type="text" autocomplete="name" required>
+    <label for="phone">Phone</label>
+    <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required>
+    <label for="email">Email</label>
+    <div class="fc-hint">So we can send your design and budget in writing.</div>
+    <input id="email" name="email" type="email" inputmode="email" autocomplete="email" required>
+    <button class="fc-btn" type="submit">Book my free design consult</button>
+    <div class="fc-micro">20 years in outdoor living · 2 year limited warranty<!-- INSURED-CLAIM-REMOVED: restore ' · Fully insured' the day the COI is on file. He offered it at intake Jul 2026 and never sent it. Do not print it before then. -->
+      <span style="display:block;margin-top:8px;opacity:.85;font-size:.92em;line-height:1.5">By submitting you agree to receive calls, texts and emails from Creative Edge Landscaping about your project. Message and data rates may apply. Reply STOP to opt out.</span>
+    </div>
+  </div>
+</form>
