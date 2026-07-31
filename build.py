@@ -116,9 +116,11 @@ def header(active, nav=True):
 
 
 def footer(with_nav=True):
-    # "Fully insured" is DELIBERATELY ABSENT until the COI is on file.
-    # He offered it at intake and never sent it; we do not print a claim we
-    # cannot back with paper. Restore this line the day the certificate lands.
+    # "Fully insured" is BACKED: Blaine confirmed to John on 2026-07-31 that the
+    # policy is current, and is sending the certificate. Restored on that basis.
+    # If it ever turns out to be lapsed, this line plus the hero trust chip, the
+    # form trust line and the FAQ answer all come straight back out — that is
+    # exactly what KDT cost us ("$5M insured" over a 294-day-expired COI).
     cols = "".join(
         f'<a href="{h}">{label}</a><span>·</span>' for h, label in NAV
     ).rstrip("<span>·</span>")
@@ -126,7 +128,7 @@ def footer(with_nav=True):
               if with_nav else "")
     return f"""<footer>
   <div class="wrap fl">
-    <span>Creative Edge Landscaping Ltd.</span><span>·</span>
+    <span>Creative Edge Landscaping Ltd.</span><span>·</span><span>Fully insured</span><span>·</span>
     <span>2 year limited warranty</span><span>·</span><span>Vernon &amp; the North Okanagan</span><span>·</span>
     <span><a href="tel:{PHONE_HREF}">{PHONE_TEXT}</a></span>
   </div>{navrow}
