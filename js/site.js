@@ -58,10 +58,14 @@
     // try{fbq('track','Lead',{content_name:'Creative Edge '+payload.page},{eventID:eid});}catch(_){}
     // try{gtag('event','conversion',{send_to:'AW-XXXXXXXXXX/LABEL'});}catch(_){}
     // (2) server side -> Railway: honeypot + phone validate -> GHL upsert + speed-to-lead -> CAPI Lead (hashed)
-    // ⚠️ ENDPOINT NOT BUILT YET — /webhook/creative_edge/lp-lead must exist before launch.
+    // Endpoint is LIVE and verified end to end (Jul 31 2026): POST -> GHL contact.
     try{fetch('https://profound-truth-production-4190.up.railway.app/webhook/creative_edge/lp-lead',
       {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),keepalive:true});}catch(_){}
     // (3) thank you
     this.style.display='none';
-    var d=document.getElementById('done'); d.classList.add('on'); d.scrollIntoView({behavior:'smooth',block:'center'});
+    // #done lives next to the form. Guard it: a page that ships a form without
+    // a success block would otherwise hide the form and tell the person nothing.
+    var d=document.getElementById('done');
+    if(d){d.classList.add('on'); d.scrollIntoView({behavior:'smooth',block:'center'});}
+    else{location.href='thank-you.html';}
   });
