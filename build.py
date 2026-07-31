@@ -17,12 +17,28 @@ for him. Do not introduce a runtime build step, a JS framework, or a CDN.
 USAGE:  python3 build.py          # writes every page to the site root
         python3 build.py --check  # verify only, exit 1 on drift
 """
+import hashlib
 import pathlib
 import re
 import sys
 
 ROOT = pathlib.Path(__file__).parent
 CONTENT = ROOT / "build" / "content"
+
+
+def asset(rel):
+    """Append a content hash so a changed stylesheet is never served stale.
+
+    GitHub Pages sends cache-control: max-age=600 on css/site.css, and browsers
+    routinely hold it longer. Because the filename never changes, a CSS edit can
+    leave a returning visitor on the OLD stylesheet with the NEW markup — which
+    is exactly how the About stat cards rendered as bare unstyled text for John
+    on 2026-07-31 while the live file was already correct. The hash changes
+    whenever the file does, so the browser is forced to refetch.
+    """
+    f = ROOT / rel
+    h = hashlib.sha1(f.read_bytes()).hexdigest()[:10] if f.exists() else "dev"
+    return f"{rel}?v={h}"
 
 PHONE_HREF = "+12508126112"
 PHONE_TEXT = "(250) 812 6112"
@@ -74,7 +90,7 @@ def head(title, desc, robots="index,follow"):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="{asset('css/site.css')}">
 </head>
 <body id="top">"""
 
@@ -129,7 +145,7 @@ def build_page(slug, title, desc, robots="index,follow", nav=True):
         header(f"{slug}.html", nav=nav),
         body.rstrip(),
         footer(with_nav=nav),
-        '<script src="js/site.js" defer></script>\n</body>\n</html>',
+        f'<script src="{asset("js/site.js")}" defer></script>\n</body>\n</html>',
     ]
     return "\n".join(parts) + "\n"
 
