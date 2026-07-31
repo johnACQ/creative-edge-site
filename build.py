@@ -67,13 +67,22 @@ NAV = [
 ]
 
 TRACKING_NOTE = """<!-- ============================================================
-     TRACKING — N1 BLOCKED, DO NOT LAUNCH UNTIL FILLED
-     Meta pixel: Creative Edge has NO Apex-verified pixel yet.
-       The pixel on creativeedgelandscaping.ca (872232952291575) is of
-       UNKNOWN OWNERSHIP (likely the old agency). DO NOT wire it.
-     Google Ads: new account 9265315772 exists, conversion action not built.
-     Both intentionally left as placeholders. Base tag + PageView only when filled.
-     ============================================================ -->"""
+     TRACKING
+     Google Ads: account 9265315772, conversion action 7704636228
+       "Submit lead form" (primary, one-per-click). Event fires in
+       js/site.js on lead submit: send_to AW-18360839838/TmuOCMTW7dkcEJ7dkLNE
+     GA4: property not created yet — add its G- config here when it exists.
+     Meta pixel: still BLOCKED. The pixel on creativeedgelandscaping.ca
+       (872232952291575) is of UNKNOWN OWNERSHIP (likely the old agency).
+       DO NOT wire it until Blaine confirms ownership (asked Jul 31 email).
+     ============================================================ -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18360839838"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'AW-18360839838');
+</script>"""
 
 
 def head(title, desc, robots="index,follow"):

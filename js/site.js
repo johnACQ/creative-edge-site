@@ -54,9 +54,9 @@
       town:town,reason:reason,timeframe:timeframe,
       page:(location.pathname.split('/').pop()||'lp').replace('.html',''),
       gclid:getC('_gclid'),fbp:getC('_fbp'),fbc:getC('_fbc'),event_id:eid,source:(location.pathname.split('/').pop()||'').indexOf('lp-')===0?'meta-lp':'website'};
-    // (1) browser signal — ENABLE ONLY once the new pixel / conversion action exist (N1)
+    // (1) browser signal — Google live (conv action 7704636228); Meta still blocked on pixel ownership
     // try{fbq('track','Lead',{content_name:'Creative Edge '+payload.page},{eventID:eid});}catch(_){}
-    // try{gtag('event','conversion',{send_to:'AW-XXXXXXXXXX/LABEL'});}catch(_){}
+    try{gtag('event','conversion',{send_to:'AW-18360839838/TmuOCMTW7dkcEJ7dkLNE'});}catch(_){}
     // (2) server side -> Railway: honeypot + phone validate -> GHL upsert + speed-to-lead -> CAPI Lead (hashed)
     // Endpoint is LIVE and verified end to end (Jul 31 2026): POST -> GHL contact.
     try{fetch('https://profound-truth-production-4190.up.railway.app/webhook/creative_edge/lp-lead',
