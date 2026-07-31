@@ -6,6 +6,11 @@
       var p=new URLSearchParams(location.search);
       if(p.get('gclid'))setC('_gclid',p.get('gclid'));
       if(p.get('fbclid'))setC('_fbc','fb.1.'+Date.now()+'.'+p.get('fbclid'));
+      // utm capture: cookied on landing so a visitor who converts on a later page
+      // (or later session, 90d) keeps campaign attribution
+      ['utm_source','utm_medium','utm_campaign'].forEach(function(k){
+        if(p.get(k))setC('_'+k,p.get(k));
+      });
       var g=getC('_gclid'), f=document.querySelector('form.form-card');
       if(g&&f&&!f.querySelector('[name=gclid]')){var i=document.createElement('input');i.type='hidden';i.name='gclid';i.value=g;f.appendChild(i);}
     }catch(_){}
@@ -53,7 +58,8 @@
     var payload={name:this.name.value,phone:this.phone.value,email:this.email.value,
       town:town,reason:reason,timeframe:timeframe,
       page:(location.pathname.split('/').pop()||'lp').replace('.html',''),
-      gclid:getC('_gclid'),fbp:getC('_fbp'),fbc:getC('_fbc'),event_id:eid,source:(location.pathname.split('/').pop()||'').indexOf('lp-')===0?'meta-lp':'website'};
+      gclid:getC('_gclid'),fbp:getC('_fbp'),fbc:getC('_fbc'),event_id:eid,source:(location.pathname.split('/').pop()||'').indexOf('lp-')===0?'meta-lp':'website',
+      utm_source:getC('_utm_source'),utm_medium:getC('_utm_medium'),utm_campaign:getC('_utm_campaign')};
     // (1) browser signal — Google live (conv action 7704636228); Meta still blocked on pixel ownership
     // try{fbq('track','Lead',{content_name:'Creative Edge '+payload.page},{eventID:eid});}catch(_){}
     try{gtag('event','conversion',{send_to:'AW-18360839838/TmuOCMTW7dkcEJ7dkLNE'});}catch(_){}
