@@ -200,3 +200,22 @@
   /* An h1 inside a content band is not sitting over a hero photo, so it does not
      need the legibility text-shadow the hero h1 carries. */
   .band h1{text-shadow:none;max-width:20ch}
+
+  /* ── Full-bleed banner image, used to break up text-only pages.
+     Fixed aspect so it never causes layout shift on load. ── */
+  .banner{position:relative;width:100%;overflow:hidden;border-radius:0;line-height:0}
+  .banner img{width:100%;height:100%;object-fit:cover;display:block;aspect-ratio:21/9}
+  .banner--tall img{aspect-ratio:16/9}
+  .banner figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 20px 12px;
+    font-size:12.5px;line-height:1.5;color:#e8edf3;
+    background:linear-gradient(0deg,rgba(8,9,11,.9),transparent)}
+  .banner figcaption .wrap{padding:0}
+  @media(max-width:860px){
+    .banner img{aspect-ratio:16/10}
+    .banner--tall img{aspect-ratio:4/3}
+    .banner figcaption{font-size:11.5px;padding:22px 16px 10px}
+  }
+
+  /* Post header image sits inside the narrow article column. */
+  .post-hero{margin:26px 0 8px;border-radius:14px;overflow:hidden;border:1px solid var(--line);line-height:0}
+  .post-hero img{width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover}
