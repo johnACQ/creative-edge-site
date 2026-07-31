@@ -300,3 +300,9 @@
   .callout p{color:#dbe2ea}
   .callout p + p{margin-top:14px}
   @media(max-width:860px){ .callout{padding:20px 18px} }
+
+  /* Hero background focal point. object-fit:cover crops to the hero's very wide
+     strip, and the default centre crop can cut the subject out. Set the focal
+     point per page rather than reaching for a different photo. */
+  .hero--focus-low .hero__bg img{object-position:center 66%}
+  @media(max-width:860px){ .hero--focus-low .hero__bg img{object-position:center 58%} }
