@@ -219,3 +219,22 @@
   /* Post header image sits inside the narrow article column. */
   .post-hero{margin:26px 0 8px;border-radius:14px;overflow:hidden;border:1px solid var(--line);line-height:0}
   .post-hero img{width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover}
+
+  /* ── Bright hero photo variant.
+     The default .hero__bg::after gradient was tuned against the Bruere render,
+     which is dark on the left. The Kalamalka Lake photo is bright edge to edge,
+     so that overlay leaves the headline relying on its text-shadow, which reads
+     as a grey box around the copy. This deepens the wash on the copy side. ── */
+  .hero--bright .hero__bg::after{background:
+    linear-gradient(90deg,rgba(8,9,11,.88) 0%,rgba(8,9,11,.74) 38%,rgba(8,9,11,.42) 68%,rgba(8,9,11,.26) 100%),
+    linear-gradient(0deg,var(--bg),transparent 40%)}
+  .hero--bright h1{text-shadow:0 2px 10px rgba(0,0,0,.35)}
+  .hero--bright p.sub{text-shadow:0 1px 8px rgba(0,0,0,.4)}
+  @media(max-width:860px){
+    /* Lighter than the default mobile hero wash on purpose: on this page the
+       photo IS the point, so let the lake read. The headline keeps its own
+       text-shadow and the form sits on a solid card, so neither needs the
+       heavier blackout the default hero uses. */
+    .hero--bright .hero__bg::after{background:
+      linear-gradient(0deg,rgba(8,9,11,.94) 30%,rgba(8,9,11,.44) 100%)}
+  }
