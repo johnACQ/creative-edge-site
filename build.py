@@ -121,7 +121,7 @@ def header(active, nav=True):
     {links}
   </nav>"""
     return f"""<header>
-  <a href="index.html"><img class="logo" src="img/ce-logo-dark.png" width="929" height="257" alt="Creative Edge Landscaping"></a>{navblock}
+  <a href="index.html"><img class="logo" src="img/ce-logo-dark.png" width="464" height="128" alt="Creative Edge Landscaping"></a>{navblock}
   <a class="tel" href="tel:{PHONE_HREF}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.6A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.6a2 2 0 01-.5 2.1L8 11.5a16 16 0 006 6l1.1-1.1a2 2 0 012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z"/></svg><span>Call </span>{PHONE_TEXT}</a>
 </header>"""
 
