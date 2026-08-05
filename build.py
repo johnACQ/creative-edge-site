@@ -44,6 +44,18 @@ PHONE_HREF = "+12508126112"
 PHONE_TEXT = "(250) 812 6112"
 IG = "https://www.instagram.com/creative_edge_landscaping_/"
 
+# ⛔ STAGING FLAG — flip to False AT THE DOMAIN CUTOVER, the same minute you
+# delete robots.txt. Leave it True and the real site launches invisible.
+#
+# WHY IT EXISTS (found live 2026-08-05): this repo's robots.txt is never read.
+# A crawler only reads robots.txt at the HOST ROOT, and
+# https://johnacq.github.io/robots.txt is a 404 — a GitHub Pages *project*
+# repo cannot serve one. So while these pages sat on the staging URL with the
+# default index,follow they were fully crawlable: a complete duplicate of
+# creativeedgelandscaping.ca on someone else's domain. The meta tag below is
+# the only thing that actually blocks it. Do not trust the robots.txt file.
+STAGING = True
+
 # The 8 locked towns. Kelowna, Peachland and Kamloops are DELIBERATELY ABSENT —
 # one-trade-per-town is a public term and Kelowna is another client's territory.
 # The old WordPress site advertised all three; dropping them is intentional.
@@ -88,6 +100,10 @@ gtag('config', 'G-0YEVFG52V0');
 
 
 def head(title, desc, robots="index,follow"):
+    # Single choke point: every page, whatever the registry says, goes noindex
+    # while STAGING is on. See the STAGING comment at the top of this file.
+    if STAGING:
+        robots = "noindex,nofollow"
     return f"""<!doctype html>
 <html lang="en">
 <head>
