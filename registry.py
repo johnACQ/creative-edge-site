@@ -22,14 +22,17 @@ PAGES = [
          desc="Blaine Cusack trained in Landscape Architecture at NAIT in 2002 and spent two decades building yards before moving to the Okanagan. Meet the crew who design, build and maintain your outdoor space."),
 
     dict(slug="services",
+         service=("Landscape Design, Build and Maintenance", "Landscaping"),
          title="Landscaping Services in Vernon BC | Design, Build, Maintain",
          desc="Six services under one roof: landscape design, full build, maintenance, softscaping, pools and spas, and landscape lighting. One crew from first call to finished yard."),
 
     dict(slug="pools",
+         service=("Pool, Spa and Cold Plunge Installation", "Swimming pool installation"),
          title="Pools, Spas &amp; Cold Plunges Vernon BC | Authorized ImmerSpa Installer",
          desc="Custom in-ground pools, built-in spas and cold plunges designed into the whole yard, not dropped into it. Authorized ImmerSpa distributor and certified installer serving Vernon and the North Okanagan."),
 
     dict(slug="design",
+         service=("Landscape Design", "Landscape design"),
          title="Landscape Design Packages | 2D &amp; 3D Plans, Vernon BC",
          desc="See your whole yard in 2D and 3D before anyone digs. Seven design packages from a single small space to a full property plan, each with planting, hardscape and lighting."),
 
@@ -38,6 +41,7 @@ PAGES = [
          desc="Completed pools, retaining walls, outdoor kitchens, putting greens and water features across Vernon and the North Okanagan. Design renders and finished builds."),
 
     dict(slug="commercial",
+         service=("Commercial Landscaping", "Commercial landscaping"),
          title="Commercial Landscaping Vernon BC | Strata, Office &amp; Multi-Unit",
          desc="Commercial landscape design, construction and maintenance for strata, office and multi-unit properties across Vernon and the North Okanagan. One crew, scheduled work, one contact."),
 
@@ -51,10 +55,12 @@ PAGES = [
 
     # ---- service detail pages (linked from Services, not in nav) ---------
     dict(slug="retaining-walls",
+         service=("Retaining Wall Construction", "Retaining wall construction"),
          title="Retaining Walls Vernon BC | Engineered, Drained, Built to Hold",
          desc="Retaining walls built with the drainage and base most quotes leave out. Serving Vernon and the North Okanagan. Two year limited warranty."),
 
     dict(slug="outdoor-living",
+         service=("Outdoor Living Construction", "Outdoor living construction"),
          title="Outdoor Living Spaces Vernon BC | Kitchens, Firepits, Lighting",
          desc="Outdoor kitchens, firepits, patios and lighting designed as one space. Vernon and the North Okanagan, designed and built by one crew."),
 
@@ -75,6 +81,11 @@ PAGES = [
     dict(slug="thank-you",
          title="Thanks, we have your details | Creative Edge Landscaping",
          desc="Your enquiry is in. We call back the same working day.",
+         robots="noindex,follow"),
+
+    dict(slug="terms",
+         title="Terms of Use | Creative Edge Landscaping Ltd.",
+         desc="The terms that cover your use of the Creative Edge Landscaping website. Not a contract for landscaping work.",
          robots="noindex,follow"),
 
     dict(slug="privacy-policy",

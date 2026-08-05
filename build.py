@@ -78,6 +78,59 @@ NAV = [
     ("contact.html",        "Contact"),
 ]
 
+# Canonical host for structured data. NON-www deliberately: the live server
+# 301s www -> apex today, so www would name a URL that redirects. Schema @id is
+# an identity, so it must be the URL that actually resolves after cutover.
+CANONICAL = "https://creativeedgelandscaping.ca"
+
+# Legal name from the footer/privacy page; `name` is the real-world trading name
+# that must match GBP EXACTLY (playbook 03: one canonical NAP everywhere).
+# ⛔ NO aggregateRating here, ever. Both his GBP listings have ZERO reviews —
+# a rating in schema with nothing behind it is fabricated markup and a Google
+# structured-data penalty. It goes in when real reviews exist, not before.
+# ⛔ NO streetAddress: he is a service-area business, address hidden on GBP
+# (N6.4). addressLocality/Region/Country only, plus areaServed.
+def business_schema():
+    towns = ",".join(
+        '{"@type":"City","name":"%s"}' % t for t in TOWNS)
+    return (
+        '{"@type":["LocalBusiness","HomeAndConstructionBusiness"],'
+        f'"@id":"{CANONICAL}/#business",'
+        '"name":"Creative Edge Landscaping",'
+        '"legalName":"Creative Edge Landscaping Ltd.",'
+        f'"url":"{CANONICAL}/",'
+        f'"telephone":"+1{PHONE_HREF.lstrip("+1")}",'
+        f'"image":"{CANONICAL}/img/ce-logo-dark.png",'
+        f'"logo":"{CANONICAL}/img/ce-logo-dark.png",'
+        '"address":{"@type":"PostalAddress","addressLocality":"Vernon",'
+        '"addressRegion":"BC","addressCountry":"CA"},'
+        f'"areaServed":[{towns}],'
+        '"founder":{"@type":"Person","name":"Blaine Cusack"},'
+        f'"sameAs":["{IG}"]}}'
+    )
+
+
+def schema_block(slug, service):
+    """One @graph per page: the business, plus a Service node where the page is
+    a money service. Service.provider points at the business @id so every page
+    reinforces one entity instead of minting nine unrelated businesses."""
+    nodes = [business_schema()]
+    if service:
+        name, stype = service
+        nodes.append(
+            '{"@type":"Service",'
+            f'"@id":"{CANONICAL}/{slug}.html#service",'
+            f'"name":"{name}","serviceType":"{stype}",'
+            f'"provider":{{"@id":"{CANONICAL}/#business"}},'
+            f'"areaServed":{{"@type":"City","name":"Vernon"}},'
+            f'"url":"{CANONICAL}/{slug}.html"}}'
+        )
+    graph = ",".join(nodes)
+    return ('\n<script type="application/ld+json">'
+            f'{{"@context":"https://schema.org","@graph":[{graph}]}}'
+            '</script>')
+
+
 TRACKING_NOTE = """<!-- ============================================================
      TRACKING
      Google Ads: account 9265315772, conversion action 7704636228
@@ -99,7 +152,7 @@ gtag('config', 'G-0YEVFG52V0');
 </script>"""
 
 
-def head(title, desc, robots="index,follow"):
+def head(title, desc, robots="index,follow", schema=""):
     # Single choke point: every page, whatever the registry says, goes noindex
     # while STAGING is on. See the STAGING comment at the top of this file.
     if STAGING:
@@ -117,7 +170,7 @@ def head(title, desc, robots="index,follow"):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{asset('css/site.css')}">
+<link rel="stylesheet" href="{asset('css/site.css')}">{schema}
 </head>
 <body id="top">"""
 
@@ -162,15 +215,16 @@ def footer(with_nav=True):
   <div class="wrap fl" style="margin-top:12px">
     <a href="{IG}" rel="noopener">Instagram</a><span>·</span>
     <a href="privacy-policy.html">Privacy Policy</a><span>·</span>
+    <a href="terms.html">Terms</a><span>·</span>
     <span>&copy; 2026 Creative Edge Landscaping Ltd.</span>
   </div>
 </footer>"""
 
 
-def build_page(slug, title, desc, robots="index,follow", nav=True):
+def build_page(slug, title, desc, robots="index,follow", nav=True, service=None):
     body = (CONTENT / f"{slug}.html").read_text()
     parts = [
-        head(title, desc, robots),
+        head(title, desc, robots, schema_block(slug, service)),
         header(f"{slug}.html", nav=nav),
         body.rstrip(),
         footer(with_nav=nav),
@@ -187,7 +241,8 @@ def main():
         out = ROOT / f"{spec['slug']}.html"
         html = build_page(spec["slug"], spec["title"], spec["desc"],
                           spec.get("robots", "index,follow"),
-                          spec.get("nav", True))
+                          spec.get("nav", True),
+                          spec.get("service"))
         if check:
             if not out.exists() or out.read_text() != html:
                 drift.append(spec["slug"])
