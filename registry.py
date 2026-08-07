@@ -14,11 +14,11 @@ over as unlinked-from-nav utility pages, same as his site.
 PAGES = [
     # ---- the 9 nav pages -------------------------------------------------
     dict(slug="index",
-         title="Outdoor Living Design &amp; Build | Creative Edge Landscaping, Vernon BC",
-         desc="Creative Edge Landscaping designs and builds outdoor living across Vernon and the North Okanagan. Pools, retaining walls, hardscape, planting and lighting, all by one crew. Twenty years. Book a free design consult."),
+         title="Outdoor Living Design &amp; Build | Creative Edge, Vernon BC",
+         desc="Creative Edge designs and builds outdoor living across Vernon and the North Okanagan. Pools, retaining walls, hardscape, planting and lighting, all by one crew. Twenty years. Book a free design consult."),
 
     dict(slug="about",
-         title="About Creative Edge Landscaping | Vernon BC Design-Build Crew",
+         title="About Creative Edge Outdoor Living | Vernon BC Design-Build Crew",
          desc="Blaine Cusack trained in Landscape Architecture at NAIT in 2002 and spent two decades building yards before moving to the Okanagan. Meet the crew who design, build and maintain your outdoor space."),
 
     dict(slug="services",
@@ -50,7 +50,7 @@ PAGES = [
          desc="Straight answers on landscape design, pools, retaining walls and what things actually cost in Vernon and the North Okanagan."),
 
     dict(slug="contact",
-         title="Contact Creative Edge Landscaping | Vernon BC",
+         title="Contact Creative Edge Outdoor Living | Vernon BC",
          desc="Call (250) 812 6112 or send us your project. We get back to you the same working day. Serving Vernon, Coldstream, Lavington, Armstrong, Enderby, Lumby, Salmon Arm and Sicamous."),
 
     # ---- service detail pages (linked from Services, not in nav) ---------
@@ -70,7 +70,7 @@ PAGES = [
          desc="What actually makes a landscape project work in the North Okanagan: drainage, sun, slope and how you really use the space."),
 
     dict(slug="blog-immerspa-pools-spas",
-         title="ImmerSpa Pools, Spas &amp; Cold Plunges | Creative Edge Landscaping",
+         title="ImmerSpa Pools, Spas &amp; Cold Plunges | Creative Edge Outdoor Living",
          desc="We are an authorized ImmerSpa distributor and certified installer. What that means for your pool, spa or cold plunge in the Okanagan."),
 
     dict(slug="blog-spring-garden-refresh",
@@ -79,13 +79,13 @@ PAGES = [
 
     # ---- utility pages ---------------------------------------------------
     dict(slug="thank-you",
-         title="Thanks, we have your details | Creative Edge Landscaping",
+         title="Thanks, we have your details | Creative Edge Outdoor Living",
          desc="Your enquiry is in. We call back the same working day.",
          robots="noindex,follow"),
 
     dict(slug="terms",
          title="Terms of Use | Creative Edge Landscaping Ltd.",
-         desc="The terms that cover your use of the Creative Edge Landscaping website. Not a contract for landscaping work.",
+         desc="The terms that cover your use of the Creative Edge Outdoor Living website. Not a contract for landscaping work.",
          robots="noindex,follow"),
 
     dict(slug="privacy-policy",
@@ -95,14 +95,14 @@ PAGES = [
 
     # ---- paid landing pages: noindex, NO NAV ----------------------------
     dict(slug="lp-pools",  nav=False, robots="noindex",
-         title="Pool &amp; Backyard Design, Vernon BC | Creative Edge Landscaping",
+         title="Pool &amp; Backyard Design, Vernon BC | Creative Edge Outdoor Living",
          desc="Custom pools designed into the whole yard. Free design consult, Vernon and the North Okanagan."),
 
     dict(slug="lp-retaining-walls", nav=False, robots="noindex",
-         title="Retaining Walls, Vernon BC | Creative Edge Landscaping",
+         title="Retaining Walls, Vernon BC | Creative Edge Outdoor Living",
          desc="Retaining walls built to hold. Free design consult, Vernon and the North Okanagan."),
 
     dict(slug="lp-outdoor-living", nav=False, robots="noindex",
-         title="Outdoor Living Spaces, Vernon BC | Creative Edge Landscaping",
+         title="Outdoor Living Spaces, Vernon BC | Creative Edge",
          desc="Outdoor kitchens, firepits and lighting designed as one space. Free design consult."),
 ]

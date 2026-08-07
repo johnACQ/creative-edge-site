@@ -1,6 +1,19 @@
 #!/usr/bin/env python3
 """
-Creative Edge Landscaping — static site generator.
+Creative Edge Outdoor Living — static site generator.
+
+BRAND (locked 2026-08-07). The business trades as CREATIVE EDGE with the
+descriptor OUTDOOR LIVING. "Landscaping" is OUT of the brand name: headers,
+footers, titles, meta, alt text. It stays only as a lowercase word describing
+a service ("landscape design", "commercial landscaping"), because that is what
+the work is and what people search.
+
+Two things deliberately keep the old string and must NOT be "fixed":
+  1. the LEGAL ENTITY, "Creative Edge Landscaping Ltd." — the company was not
+     renamed at the BC registry, so the copyright notice, the terms page and
+     the privacy page name the entity that actually holds the rights and the
+     obligations. schema legalName follows the same rule.
+  2. the DOMAIN, creativeedgelandscaping.ca.
 
 WHY THIS EXISTS
 ---------------
@@ -85,6 +98,12 @@ CANONICAL = "https://creativeedgelandscaping.ca"
 
 # Legal name from the footer/privacy page; `name` is the real-world trading name
 # that must match GBP EXACTLY (playbook 03: one canonical NAP everywhere).
+# ⚠️ OPEN AS OF 2026-08-07: `name` now carries the locked new brand, but the GBP
+# business title still reads "Creative Edge Landscaping". Until GBP is retitled
+# the two disagree, which is why `alternateName` keeps the old string here — it
+# lets Google reconcile the two names instead of seeing an unrelated business.
+# Retitling GBP is an N6.3 change and belongs to the local-SEO pass, not to this
+# file. Delete alternateName once GBP has been retitled and has settled.
 # ⛔ NO aggregateRating here, ever. Both his GBP listings have ZERO reviews —
 # a rating in schema with nothing behind it is fabricated markup and a Google
 # structured-data penalty. It goes in when real reviews exist, not before.
@@ -96,12 +115,13 @@ def business_schema():
     return (
         '{"@type":["LocalBusiness","HomeAndConstructionBusiness"],'
         f'"@id":"{CANONICAL}/#business",'
-        '"name":"Creative Edge Landscaping",'
+        '"name":"Creative Edge Outdoor Living",'
+        '"alternateName":"Creative Edge Landscaping",'
         '"legalName":"Creative Edge Landscaping Ltd.",'
         f'"url":"{CANONICAL}/",'
         f'"telephone":"+1{PHONE_HREF.lstrip("+1")}",'
-        f'"image":"{CANONICAL}/img/ce-logo-dark.png",'
-        f'"logo":"{CANONICAL}/img/ce-logo-dark.png",'
+        f'"image":"{CANONICAL}/img/ce-wordmark-1200.png",'
+        f'"logo":"{CANONICAL}/img/ce-wordmark-1200.png",'
         '"address":{"@type":"PostalAddress","addressLocality":"Vernon",'
         '"addressRegion":"BC","addressCountry":"CA"},'
         f'"areaServed":[{towns}],'
@@ -189,8 +209,14 @@ def header(active, nav=True):
   <nav class="mainnav">
     {links}
   </nav>"""
+    # ⛔ WORDMARK-ONLY INTERIM (2026-08-07). ce-wordmark.svg is a TYPE lockup:
+    # CREATIVE EDGE over a letterspaced OUTDOOR LIVING with green rules. It does
+    # NOT contain the CE hexagon monogram, on purpose — the vectors are still
+    # with Blaine's designer and a near-miss recreation of a client's own logo
+    # is worse than no logo. When the real vectors land, swap the file, keep the
+    # alt text. Regenerate with: python3 build/make_wordmark.py
     return f"""<header>
-  <a href="index.html"><img class="logo" src="img/ce-logo-dark.png" width="464" height="128" alt="Creative Edge Landscaping"></a>{navblock}
+  <a href="index.html"><img class="logo" src="{asset('img/ce-wordmark.svg')}" width="1151" height="165" alt="Creative Edge Outdoor Living"></a>{navblock}
   <a class="tel" href="tel:{PHONE_HREF}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.6A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.6a2 2 0 01-.5 2.1L8 11.5a16 16 0 006 6l1.1-1.1a2 2 0 012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z"/></svg><span>Call </span>{PHONE_TEXT}</a>
 </header>"""
 
@@ -206,9 +232,13 @@ def footer(with_nav=True):
     ).rstrip("<span>·</span>")
     navrow = (f'\n  <div class="wrap fl" style="margin-top:12px">{cols}</div>'
               if with_nav else "")
+    # Row 1 names the BUSINESS, so it carries the trading brand. The copyright
+    # line below names the LEGAL ENTITY and keeps "Creative Edge Landscaping
+    # Ltd." — that is who actually holds the copyright, and the company was not
+    # renamed at the registry. Do not "tidy" the two into one string.
     return f"""<footer>
   <div class="wrap fl">
-    <span>Creative Edge Landscaping Ltd.</span><span>·</span><span>Fully insured</span><span>·</span>
+    <span>Creative Edge Outdoor Living</span><span>·</span><span>Fully insured</span><span>·</span>
     <span>2 year limited warranty</span><span>·</span><span>Vernon &amp; the North Okanagan</span><span>·</span>
     <span><a href="tel:{PHONE_HREF}">{PHONE_TEXT}</a></span>
   </div>{navrow}
