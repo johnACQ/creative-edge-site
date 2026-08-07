@@ -209,14 +209,14 @@ def header(active, nav=True):
   <nav class="mainnav">
     {links}
   </nav>"""
-    # ⛔ WORDMARK-ONLY INTERIM (2026-08-07). ce-wordmark.svg is a TYPE lockup:
-    # CREATIVE EDGE over a letterspaced OUTDOOR LIVING with green rules. It does
-    # NOT contain the CE hexagon monogram, on purpose — the vectors are still
-    # with Blaine's designer and a near-miss recreation of a client's own logo
-    # is worse than no logo. When the real vectors land, swap the file, keep the
-    # alt text. Regenerate with: python3 build/make_wordmark.py
+    # LOCKUP. img/ce-wordmark.svg = the client's OWN hexagon monogram (extracted
+    # from CEL_logo_Vector.ai with build/extract_monogram.py, geometry untouched,
+    # fills recoloured to the new brand) + CREATIVE EDGE / OUTDOOR LIVING set in
+    # Oswald 700 and converted to paths. No webfont, no FOUT, renders anywhere.
+    # Proportions are calibrated against the vehicle wrap: 0.70% mean deviation.
+    # Regenerate: python3 build/extract_monogram.py && python3 build/make_wordmark.py
     return f"""<header>
-  <a href="index.html"><img class="logo" src="{asset('img/ce-wordmark.svg')}" width="1151" height="165" alt="Creative Edge Outdoor Living"></a>{navblock}
+  <a href="index.html"><img class="logo" src="{asset('img/ce-wordmark.svg')}" width="1028" height="290" alt="Creative Edge Outdoor Living"></a>{navblock}
   <a class="tel" href="tel:{PHONE_HREF}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.6A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.6a2 2 0 01-.5 2.1L8 11.5a16 16 0 006 6l1.1-1.1a2 2 0 012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z"/></svg><span>Call </span>{PHONE_TEXT}</a>
 </header>"""
 
