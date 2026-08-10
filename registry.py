@@ -19,12 +19,12 @@ PAGES = [
 
     dict(slug="about",
          title="About Creative Edge Outdoor Living | Vernon BC Design-Build Crew",
-         desc="Blaine Cusack trained in Landscape Architecture at NAIT in 2002 and spent two decades building yards before moving to the Okanagan. Meet the crew who design, build and maintain your outdoor space."),
+         desc="Blaine Cusack took the Landscape Architecture Tech program at NAIT in 2002 and spent two decades building yards before moving to the Okanagan. Meet the crew who design, build and maintain your outdoor space."),
 
     dict(slug="services",
          service=("Landscape Design, Build and Maintenance", "Landscaping"),
          title="Landscaping Services in Vernon BC | Design, Build, Maintain",
-         desc="Six services under one roof: landscape design, full build, maintenance, softscaping, pools and spas, and landscape lighting. One crew from first call to finished yard."),
+         desc="Eight services under one roof: landscape design, full build, maintenance, softscaping, landscape lighting, pools, spas and cold plunges. One crew from first call to finished yard."),
 
     dict(slug="pools",
          service=("Pool, Spa and Cold Plunge Installation", "Swimming pool installation"),
