@@ -304,6 +304,87 @@ def main():
         + "\n".join(urls) + "\n</urlset>\n")
     print(f"wrote sitemap.xml ({len(urls)} indexable urls)")
 
+    # ---- legacy URL redirects ---------------------------------------------
+    # ⛔ DO NOT DELETE. Google still shows sitelinks for the OLD WordPress site
+    # (Contact Us / OUR WORK / About Us / DESIGN / Our services / Outdoor
+    # Living), and those point at directory URLs like /about/. This site serves
+    # .html files, so every one of them 404s [v 2026-08-13 - all 9 probed, all 404].
+    # Anyone clicking Creative Edge in Google would hit a dead page.
+    #
+    # GitHub Pages has no server-side redirects, so each legacy path gets a stub
+    # index.html: instant meta-refresh for humans, rel=canonical so Google
+    # consolidates the old URL onto the new one, noindex so the stub itself
+    # never ranks. Extra aliases that may never have existed are harmless.
+    REDIRECTS = {
+        "about": "about.html",
+        "about-us": "about.html",
+        "contact": "contact.html",
+        "contact-us": "contact.html",
+        "our-work": "our-work.html",
+        "work": "our-work.html",
+        "gallery": "our-work.html",
+        "portfolio": "our-work.html",
+        "design": "design.html",
+        "landscape-design": "design.html",
+        "services": "services.html",
+        "our-services": "services.html",
+        "outdoor-living": "outdoor-living.html",
+        "outdoor-living-spaces": "outdoor-living.html",
+        "pools": "pools.html",
+        "pools-spas": "pools.html",
+        "retaining-walls": "retaining-walls.html",
+        "commercial": "commercial.html",
+        "blog": "blog.html",
+        "news": "blog.html",
+        "home": "",
+    }
+    made = 0
+    for old, new in REDIRECTS.items():
+        target = f"{CANONICAL}/{new}" if new else f"{CANONICAL}/"
+        d = ROOT / old
+        d.mkdir(exist_ok=True)
+        (d / "index.html").write_text(
+            '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+            f'<meta http-equiv="refresh" content="0; url={target}">\n'
+            f'<link rel="canonical" href="{target}">\n'
+            '<meta name="robots" content="noindex,follow">\n'
+            '<title>Redirecting…</title>\n'
+            f'<script>window.location.replace("{target}");</script>\n'
+            '</head>\n<body>\n'
+            f'<p>This page has moved. <a href="{target}">Continue to Creative Edge Outdoor Living</a>.</p>\n'
+            '</body>\n</html>\n')
+        made += 1
+    print(f"wrote {made} legacy-URL redirect stubs")
+
+    # ---- 404 --------------------------------------------------------------
+    # GitHub Pages serves /404.html for anything unmatched. Without it a bad
+    # link shows GitHub's own branded 404, which looks like the site is broken.
+    (ROOT / "404.html").write_text(build_page(
+        "404-body", "Page not found | Creative Edge Outdoor Living",
+        "That page has moved. Find outdoor living, pools, retaining walls and "
+        "contact details for Creative Edge in Vernon and the North Okanagan.",
+        robots="noindex,follow") if (CONTENT / "404-body.html").exists() else
+        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        '<meta name="robots" content="noindex,follow">\n'
+        '<title>Page not found | Creative Edge Outdoor Living</title>\n'
+        f'<link rel="stylesheet" href="{asset("css/site.css")}">\n'
+        '</head>\n<body id="top">\n'
+        '<section class="band"><div class="wrap" style="max-width:720px;text-align:center;padding:80px 0">\n'
+        '<p class="kicker">Creative Edge Outdoor Living</p>\n'
+        '<h1>That page has <span class="em">moved</span></h1>\n'
+        '<p class="lede">We rebuilt the site, so some older links no longer work. '
+        'Everything is still here, just in a new spot.</p>\n'
+        f'<p style="margin-top:28px"><a class="btn" href="{CANONICAL}/">Go to the homepage</a></p>\n'
+        '<p style="margin-top:18px">Or jump straight to '
+        f'<a href="{CANONICAL}/outdoor-living.html">outdoor living</a>, '
+        f'<a href="{CANONICAL}/pools.html">pools</a>, '
+        f'<a href="{CANONICAL}/retaining-walls.html">retaining walls</a> or '
+        f'<a href="{CANONICAL}/contact.html">contact us</a>.</p>\n'
+        f'<p style="margin-top:24px">Prefer to talk? <a href="tel:{PHONE_HREF}">{PHONE_TEXT}</a></p>\n'
+        '</div></section>\n</body>\n</html>\n')
+    print("wrote 404.html")
+
     # ---- robots.txt --------------------------------------------------------
     # Replaces the staging Disallow. On the custom domain this file IS read
     # (host root), unlike on the github.io project URL where it was a no-op.
