@@ -1,4 +1,21 @@
-// ---- click-id capture -> 90 day cookie -> hidden gclid on the form-card ----
+// ---- tap-to-call conversion (delegated: covers every tel: link on every page) ----
+  // 53 tel links across the site fired NOTHING before this — gtag was healthy, the taps
+  // were simply never wired, so a caller was invisible to Google Ads while a form fill
+  // was not. Delegated on document so it also catches links rendered later, and so a new
+  // page cannot ship an untracked call button by omission.
+  // Deliberately NOT the `onclick="if(typeof gtag...)"` pattern used elsewhere: that guard
+  // silently no-ops whenever gtag has not arrived yet (see the GHL 10s defer lesson). Here
+  // the tag is in <head> on a static page, and the try/catch fails safe without blocking
+  // the call either way — the tel: navigation is never prevented.
+  (function(){
+    document.addEventListener('click', function(e){
+      var a = e.target && e.target.closest ? e.target.closest('a[href^="tel:"]') : null;
+      if(!a) return;
+      try{ gtag('event','conversion',{send_to:'AW-18360839838/TmuOCMTW7dkcEJ7dkLNE'}); }catch(_){}
+    }, true);
+  })();
+
+  // ---- click-id capture -> 90 day cookie -> hidden gclid on the form-card ----
   (function(){
     function setC(n,v){document.cookie=n+'='+v+';path=/;max-age='+(90*86400)+';SameSite=Lax';}
     function getC(n){var v=('; '+document.cookie).split('; '+n+'=');return v.length===2?v.pop().split(';').shift():'';}
