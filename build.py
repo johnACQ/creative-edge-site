@@ -67,7 +67,7 @@ IG = "https://www.instagram.com/creative_edge_landscaping_/"
 # default index,follow they were fully crawlable: a complete duplicate of
 # creativeedgelandscaping.ca on someone else's domain. The meta tag below is
 # the only thing that actually blocks it. Do not trust the robots.txt file.
-STAGING = True
+STAGING = False
 
 # The 8 locked towns. Kelowna, Peachland and Kamloops are DELIBERATELY ABSENT —
 # one-trade-per-town is a public term and Kelowna is another client's territory.
@@ -172,7 +172,7 @@ gtag('config', 'G-0YEVFG52V0');
 </script>"""
 
 
-def head(title, desc, robots="index,follow", schema=""):
+def head(title, desc, robots="index,follow", schema="", canon=""):
     # Single choke point: every page, whatever the registry says, goes noindex
     # while STAGING is on. See the STAGING comment at the top of this file.
     if STAGING:
@@ -185,6 +185,7 @@ def head(title, desc, robots="index,follow", schema=""):
 <title>{title}</title>
 <meta name="description" content="{desc}">
 <meta name="robots" content="{robots}">
+<link rel="canonical" href="{canon}">
 <link rel="icon" type="image/png" href="img/favicon-64.png">
 {TRACKING_NOTE}
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -239,7 +240,7 @@ def footer(with_nav=True):
     return f"""<footer>
   <div class="wrap fl">
     <span>Creative Edge Outdoor Living</span><span>·</span><span>Fully insured</span><span>·</span>
-    <span>2 year limited warranty</span><span>·</span><span>Vernon &amp; the North Okanagan</span><span>·</span>
+    <span>Vernon &amp; the North Okanagan</span><span>·</span>
     <span><a href="tel:{PHONE_HREF}">{PHONE_TEXT}</a></span>
   </div>{navrow}
   <div class="wrap fl" style="margin-top:12px">
@@ -254,7 +255,8 @@ def footer(with_nav=True):
 def build_page(slug, title, desc, robots="index,follow", nav=True, service=None):
     body = (CONTENT / f"{slug}.html").read_text()
     parts = [
-        head(title, desc, robots, schema_block(slug, service)),
+        head(title, desc, robots, schema_block(slug, service),
+             canon=f"{CANONICAL}/" if slug == "index" else f"{CANONICAL}/{slug}.html"),
         header(f"{slug}.html", nav=nav),
         body.rstrip(),
         footer(with_nav=nav),
@@ -283,6 +285,33 @@ def main():
         print(f"drift: {drift}" if drift else "all pages match content sources")
         sys.exit(1 if drift else 0)
     print(f"built {written} pages")
+
+    # ---- sitemap.xml -------------------------------------------------------
+    # Only pages the registry actually lets Google index. The paid LPs, the
+    # thank-you page and the legal pages are noindex on purpose — listing them
+    # here would contradict their own meta tag and waste crawl budget.
+    urls = []
+    for spec in registry.PAGES:
+        if "noindex" in spec.get("robots", "index,follow"):
+            continue
+        slug = spec["slug"]
+        loc = f"{CANONICAL}/" if slug == "index" else f"{CANONICAL}/{slug}.html"
+        urls.append(f"  <url><loc>{loc}</loc>"
+                    f"<priority>{'1.0' if slug == 'index' else '0.8'}</priority></url>")
+    (ROOT / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "\n".join(urls) + "\n</urlset>\n")
+    print(f"wrote sitemap.xml ({len(urls)} indexable urls)")
+
+    # ---- robots.txt --------------------------------------------------------
+    # Replaces the staging Disallow. On the custom domain this file IS read
+    # (host root), unlike on the github.io project URL where it was a no-op.
+    (ROOT / "robots.txt").write_text(
+        "User-agent: *\n"
+        "Allow: /\n\n"
+        f"Sitemap: {CANONICAL}/sitemap.xml\n")
+    print("wrote robots.txt (allow + sitemap)")
 
 
 if __name__ == "__main__":

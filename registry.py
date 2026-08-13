@@ -57,7 +57,7 @@ PAGES = [
     dict(slug="retaining-walls",
          service=("Retaining Wall Construction", "Retaining wall construction"),
          title="Retaining Walls Vernon BC | Engineered, Drained, Built to Hold",
-         desc="Retaining walls built with the drainage and base most quotes leave out. Serving Vernon and the North Okanagan. Two year limited warranty."),
+         desc="Retaining walls built with the drainage and base most quotes leave out. Serving Vernon and the North Okanagan."),
 
     dict(slug="outdoor-living",
          service=("Outdoor Living Construction", "Outdoor living construction"),

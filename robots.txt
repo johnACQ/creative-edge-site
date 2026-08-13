@@ -1,7 +1,4 @@
-# STAGING HOST ONLY.
-# These pages belong on creativeedgelandscaping.ca. While they are served from
-# a github.io staging URL, nothing here should be indexed — indexing here would
-# create duplicate content against the client's own domain.
-# ⛔ DELETE THIS FILE at the domain cutover, or the real site stays invisible.
 User-agent: *
-Disallow: /
+Allow: /
+
+Sitemap: https://creativeedgelandscaping.ca/sitemap.xml
