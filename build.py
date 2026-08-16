@@ -158,9 +158,11 @@ TRACKING_NOTE = """<!-- ========================================================
        js/site.js on lead submit: send_to AW-18360839838/TmuOCMTW7dkcEJ7dkLNE
      GA4: account "Creative Edge Landscaping", stream 15360314212
        (www.creativeedgelandscaping.ca), measurement ID G-0YEVFG52V0.
-     Meta pixel: still BLOCKED. The pixel on creativeedgelandscaping.ca
-       (872232952291575) is of UNKNOWN OWNERSHIP (likely the old agency).
-       DO NOT wire it until Blaine confirms ownership (asked Jul 31 email).
+     Meta pixel 872232952291575: OWNED BY BLAINE'S BUSINESS (resolved
+       2026-08-15, Events Manager dataset read). Head carries base pixel
+       + PageView ONLY. `Lead` fires SERVER-SIDE via Railway CAPI on
+       qualified submits — never add fbq('track','Lead') here, it would
+       double-fire against the CAPI event.
      ============================================================ -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18360839838"></script>
 <script>
@@ -169,7 +171,18 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'AW-18360839838');
 gtag('config', 'G-0YEVFG52V0');
-</script>"""
+</script>
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '872232952291575');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=872232952291575&ev=PageView&noscript=1"/></noscript>"""
 
 
 def head(title, desc, robots="index,follow", schema="", canon=""):

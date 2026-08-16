@@ -77,8 +77,21 @@
       page:(location.pathname.split('/').pop()||'lp').replace('.html',''),
       gclid:getC('_gclid'),fbp:getC('_fbp'),fbc:getC('_fbc'),event_id:eid,source:(location.pathname.split('/').pop()||'').indexOf('lp-')===0?'meta-lp':'website',
       utm_source:getC('_utm_source'),utm_medium:getC('_utm_medium'),utm_campaign:getC('_utm_campaign')};
-    // (1) browser signal — Google live (conv action 7704636228); Meta still blocked on pixel ownership
-    // try{fbq('track','Lead',{content_name:'Creative Edge '+payload.page},{eventID:eid});}catch(_){}
+    // (1) browser signal — Google live (conv action 7704636228).
+    // Meta browser-side stays PageView-only BY DESIGN: `Lead` fires server-side via
+    // Railway CAPI on qualified submits (event_id above is the dedupe key if that
+    // ever changes). Do not add fbq('track','Lead') here.
+    // Enhanced Conversions: hand gtag the raw values BEFORE the conversion event —
+    // Google hashes them client-side. Email is the strongest key; phone + name/city back it up.
+    try{
+      var nm=this.name.value.trim(), sp=nm.indexOf(' ');
+      gtag('set','user_data',{
+        email:this.email.value.trim(),
+        phone_number:this.phone.value.trim(),
+        address:{first_name:(sp>0?nm.slice(0,sp):nm),last_name:(sp>0?nm.slice(sp+1):''),
+                 city:town,country:'CA'}
+      });
+    }catch(_){}
     try{gtag('event','conversion',{send_to:'AW-18360839838/TmuOCMTW7dkcEJ7dkLNE'});}catch(_){}
     // (2) server side -> Railway: honeypot + phone validate -> GHL upsert + speed-to-lead -> CAPI Lead (hashed)
     // Endpoint is LIVE and verified end to end (Jul 31 2026): POST -> GHL contact.
