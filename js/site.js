@@ -22,6 +22,12 @@
     try{
       var p=new URLSearchParams(location.search);
       if(p.get('gclid'))setC('_gclid',p.get('gclid'));
+      // wbraid / gbraid are what Google sends INSTEAD of gclid on privacy-restricted
+      // (largely iOS) clicks. Without them those conversions cannot be matched back at
+      // all. They are distinct fields in Google's import, NOT interchangeable with gclid,
+      // so they are cookied and sent under their own names — never folded into _gclid.
+      if(p.get('wbraid'))setC('_wbraid',p.get('wbraid'));
+      if(p.get('gbraid'))setC('_gbraid',p.get('gbraid'));
       if(p.get('fbclid'))setC('_fbc','fb.1.'+Date.now()+'.'+p.get('fbclid'));
       // utm capture: cookied on landing so a visitor who converts on a later page
       // (or later session, 90d) keeps campaign attribution
@@ -75,7 +81,8 @@
     var payload={name:this.name.value,phone:this.phone.value,email:this.email.value,
       town:town,reason:reason,timeframe:timeframe,
       page:(location.pathname.split('/').pop()||'lp').replace('.html',''),
-      gclid:getC('_gclid'),fbp:getC('_fbp'),fbc:getC('_fbc'),event_id:eid,source:(location.pathname.split('/').pop()||'').indexOf('lp-')===0?'meta-lp':'website',
+      gclid:getC('_gclid'),wbraid:getC('_wbraid'),gbraid:getC('_gbraid'),
+      fbp:getC('_fbp'),fbc:getC('_fbc'),event_id:eid,source:(location.pathname.split('/').pop()||'').indexOf('lp-')===0?'meta-lp':'website',
       utm_source:getC('_utm_source'),utm_medium:getC('_utm_medium'),utm_campaign:getC('_utm_campaign')};
     // (1) browser signal — Google live (conv action 7704636228).
     // Meta browser-side stays PageView-only BY DESIGN: `Lead` fires server-side via
