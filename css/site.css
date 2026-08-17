@@ -204,7 +204,10 @@
     /* The base .gal figcaption is an ABSOLUTE overlay (correct for the built-work
      gallery, where the caption sits over the photo). Crew headshots must not do
      that — it puts the name across the person's chest and face. Reset to flow. */
-  .gal--crew figcaption{position:static;background:none;padding:11px 12px 13px;font-size:13px;line-height:1.45;color:var(--muted)}
+    /* Brad asked (Aug 17 2026) for the name in white and the job title in the brand
+     green. --brand-2 is the accent-TEXT green (11.68:1 on --bg, AAA); --brand is the
+     fill green and is not used for small type. The name was already --ink (#ffffff). */
+  .gal--crew figcaption{position:static;background:none;padding:11px 12px 13px;font-size:13px;line-height:1.45;color:var(--brand-2)}
   .gal--crew figcaption strong{color:var(--ink);font-weight:700;font-size:13.5px}
   @media(max-width:860px){
     .gal--crew{grid-template-columns:repeat(3,1fr);gap:10px}
