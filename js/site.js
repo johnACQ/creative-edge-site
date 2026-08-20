@@ -100,6 +100,16 @@
       });
     }catch(_){}
     try{gtag('event','conversion',{send_to:'AW-18360839838/TmuOCMTW7dkcEJ7dkLNE'});}catch(_){}
+    /* GA4 generate_lead. Added 2026-08-20 — it was missing, so Google ADS could see
+       leads and GA4 could not, and the funnel had no terminal event. That makes
+       "zero leads" and "we cannot see leads" produce identical output, which is
+       exactly how KDT's $452/week of zero went undiagnosed for a week.
+       send_to is PINNED to the GA4 id deliberately: an unpinned gtag('event') fans
+       out to every configured target including the AW- above, which would
+       double-count the Ads conversion fired on the previous line. */
+    try{gtag('event','generate_lead',{send_to:'G-0YEVFG52V0',event_id:eid,
+      page:(location.pathname.split('/').pop()||'index').replace(/\.html$/,''),
+      value:0,currency:'CAD'});}catch(_){}
     // (2) server side -> Railway: honeypot + phone validate -> GHL upsert + speed-to-lead -> CAPI Lead (hashed)
     // Endpoint is LIVE and verified end to end (Jul 31 2026): POST -> GHL contact.
     try{fetch('https://profound-truth-production-4190.up.railway.app/webhook/creative_edge/lp-lead',
