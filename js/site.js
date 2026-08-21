@@ -48,7 +48,10 @@
     function val(n){var el=f.querySelector('[name="'+n+'"]');return el?el.value:'';}
     document.getElementById('fcNext').addEventListener('click',function(){
       var err=document.getElementById('fcErr');
-      if(!val('reason')||!val('timeframe')||!val('town')){err.classList.add('on');return;}
+      /* timeframe NOT gated (2026-08-21). The HTML `required` attr is only half the
+         lock — this line blocked independently, so unrequiring the field alone would
+         have shipped nothing. Same defect fixed on KDT 2026-08-20. */
+      if(!val('reason')||!val('town')){err.classList.add('on');return;}
       err.classList.remove('on');
       document.getElementById('step1').classList.remove('on');
       document.getElementById('step2').classList.add('on');
@@ -74,7 +77,11 @@
     function val(n){var el=this.querySelector('[name="'+n+'"]');return el?el.value:'';}
     val=val.bind(this);
     var reason=val('reason'), timeframe=val('timeframe'), town=val('town');
-    if(!this.name.value||!this.phone.value||!this.email.value||!reason||!timeframe||!town){
+    /* email + timeframe dropped from the submit gate. CE's SMS is live and delivering
+       [v 2026-08-21 - TYPE_SMS conversations on the sub], so phone alone reaches the
+       customer AND alerts Brad. ⛔ Do NOT copy this to a client whose SMS is dead —
+       KDT keeps email REQUIRED for exactly that reason. Both are still SENT when given. */
+    if(!this.name.value||!this.phone.value||!reason||!town){
       this.reportValidity&&this.reportValidity();return;}
     function getC(n){var v=('; '+document.cookie).split('; '+n+'=');return v.length===2?v.pop().split(';').shift():'';}
     var eid='ce-'+Date.now()+'-'+Math.floor(Math.random()*1e6);       // shared id: browser + server dedupe

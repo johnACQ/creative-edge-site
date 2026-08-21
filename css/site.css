@@ -333,3 +333,5 @@
      point per page rather than reaching for a different photo. */
   .hero--focus-low .hero__bg img{object-position:center 66%}
   @media(max-width:860px){ .hero--focus-low .hero__bg img{object-position:center 58%} }
+
+.opt{font-weight:400;letter-spacing:0;text-transform:none;opacity:.55}
