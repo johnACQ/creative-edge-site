@@ -77,11 +77,15 @@
     function val(n){var el=this.querySelector('[name="'+n+'"]');return el?el.value:'';}
     val=val.bind(this);
     var reason=val('reason'), timeframe=val('timeframe'), town=val('town');
-    /* email + timeframe dropped from the submit gate. CE's SMS is live and delivering
-       [v 2026-08-21 - TYPE_SMS conversations on the sub], so phone alone reaches the
-       customer AND alerts Brad. ⛔ Do NOT copy this to a client whose SMS is dead —
-       KDT keeps email REQUIRED for exactly that reason. Both are still SENT when given. */
-    if(!this.name.value||!this.phone.value||!reason||!town){
+    /* EMAIL IS BACK IN THE GATE, 2026-08-23, John's call, at Brad's request.
+       Reversing the 2026-08-21 cut. Reasoning is QUALITY, not volume: Brad answers these
+       himself and vets by email, and someone who will not leave an address is the lead
+       the Sep 3 read is meant to filter out (L0225 judges that read on quality). Bonus:
+       email is the strongest Enhanced Conversions key, so match rates improve too.
+       ⛔ This makes CE's form change TWICE inside one measurement window (Aug 21 cut,
+       Aug 23 restore) — the Sep 3 per-LP read needs BOTH dates as breakpoints (L0195).
+       timeframe stays optional. */
+    if(!this.name.value||!this.phone.value||!this.email.value||!reason||!town){
       this.reportValidity&&this.reportValidity();return;}
     function getC(n){var v=('; '+document.cookie).split('; '+n+'=');return v.length===2?v.pop().split(';').shift():'';}
     var eid='ce-'+Date.now()+'-'+Math.floor(Math.random()*1e6);       // shared id: browser + server dedupe
