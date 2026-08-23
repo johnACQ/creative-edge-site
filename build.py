@@ -13,7 +13,9 @@ Two things deliberately keep the old string and must NOT be "fixed":
      renamed at the BC registry, so the copyright notice, the terms page and
      the privacy page name the entity that actually holds the rights and the
      obligations. schema legalName follows the same rule.
-  2. the DOMAIN, creativeedgelandscaping.ca.
+  2. the LEGAL ENTITY stays even though the DOMAIN moved to
+     creativeedgeoutdoorliving.ca on 2026-08 (full migration, runbook in the
+     client dir). The old domain 301s here forever.
 
 WHY THIS EXISTS
 ---------------
@@ -94,7 +96,7 @@ NAV = [
 # Canonical host for structured data. NON-www deliberately: the live server
 # 301s www -> apex today, so www would name a URL that redirects. Schema @id is
 # an identity, so it must be the URL that actually resolves after cutover.
-CANONICAL = "https://creativeedgelandscaping.ca"
+CANONICAL = "https://creativeedgeoutdoorliving.ca"
 
 # Legal name from the footer/privacy page; `name` is the real-world trading name
 # that must match GBP EXACTLY (playbook 03: one canonical NAP everywhere).
@@ -157,7 +159,9 @@ TRACKING_NOTE = """<!-- ========================================================
        "Submit lead form" (primary, one-per-click). Event fires in
        js/site.js on lead submit: send_to AW-18360839838/TmuOCMTW7dkcEJ7dkLNE
      GA4: account "Creative Edge Landscaping", stream 15360314212
-       (www.creativeedgelandscaping.ca), measurement ID G-0YEVFG52V0.
+       (GA4 stream 15360314212 - created as www.creativeedgelandscaping.ca,
+       carries creativeedgeoutdoorliving.ca after the 2026-08 domain migration,
+       Phase 2.3 of the runbook), measurement ID G-0YEVFG52V0.
      Meta pixel 872232952291575: OWNED BY BLAINE'S BUSINESS (resolved
        2026-08-15, Events Manager dataset read). Head carries base pixel
        + PageView ONLY. `Lead` fires SERVER-SIDE via Railway CAPI on
