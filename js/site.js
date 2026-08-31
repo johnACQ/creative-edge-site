@@ -50,7 +50,7 @@
       var err=document.getElementById('fcErr');
       /* timeframe NOT gated (2026-08-21). The HTML `required` attr is only half the
          lock — this line blocked independently, so unrequiring the field alone would
-         have shipped nothing. Same defect fixed on KDT 2026-08-20. */
+         have shipped nothing. Same defect fixed on another build 2026-08-20. */
       if(!val('reason')||!val('town')){err.classList.add('on');return;}
       err.classList.remove('on');
       document.getElementById('step1').classList.remove('on');
@@ -114,7 +114,7 @@
     /* GA4 generate_lead. Added 2026-08-20 — it was missing, so Google ADS could see
        leads and GA4 could not, and the funnel had no terminal event. That makes
        "zero leads" and "we cannot see leads" produce identical output, which is
-       exactly how KDT's $452/week of zero went undiagnosed for a week.
+       exactly how a zero-lead week on an earlier build went undiagnosed.
        send_to is PINNED to the GA4 id deliberately: an unpinned gtag('event') fans
        out to every configured target including the AW- above, which would
        double-count the Ads conversion fired on the previous line. */
