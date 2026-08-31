@@ -411,6 +411,34 @@ def main():
         f"Sitemap: {CANONICAL}/sitemap.xml\n")
     print("wrote robots.txt (allow + sitemap)")
 
+    # ---- cross-client leak guard ------------------------------------------
+    # ⛔ DO NOT REMOVE. Three real leaks shipped to live client sites before this
+    # existed, all written as helpful engineering comments by someone who forgot
+    # the file is public:
+    #   2026-08-30  this site served KDT's name + a territory carve-up
+    #   2026-08-31  js/site.js served "KDT's $452/week of zero"
+    #   2026-08-31  thank-you.html named Dustin
+    # The checker is SHARED (apex_tooling/leak_guard.py) and reads the client
+    # roster from the spine, so it covers clients signed after this was written.
+    # It is deliberately non-fatal here: this build is run mid-measurement-window
+    # and a hard exit could leave a half-written site. It shouts instead.
+    try:
+        import subprocess, os
+        guard = os.path.expanduser("~/apex_tooling/leak_guard.py")
+        r = subprocess.run(
+            [sys.executable, guard, str(ROOT), "--client", "creative_edge"],
+            capture_output=True, text=True, timeout=120)
+        if r.returncode == 1:
+            print("\n" + "=" * 70)
+            print("⛔ CROSS-CLIENT LEAK IN THIS BUILD — DO NOT DEPLOY")
+            print(r.stdout.strip()[:2000])
+            print("=" * 70)
+        else:
+            print(r.stdout.strip().splitlines()[-1] if r.stdout.strip()
+                  else "leak guard: clean")
+    except Exception as e:                      # never let the guard break a build
+        print(f"⚠️  leak guard did not run ({e}) — check by hand before deploying")
+
 
 if __name__ == "__main__":
     main()
