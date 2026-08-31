@@ -428,14 +428,21 @@ def main():
         r = subprocess.run(
             [sys.executable, guard, str(ROOT), "--client", "creative_edge"],
             capture_output=True, text=True, timeout=120)
+        out = r.stdout.strip()
         if r.returncode == 1:
             print("\n" + "=" * 70)
             print("⛔ CROSS-CLIENT LEAK IN THIS BUILD — DO NOT DEPLOY")
-            print(r.stdout.strip()[:2000])
+            print(out[:2000])
             print("=" * 70)
+        elif "REVIEW" in out:
+            # exit 0, but a human still has to look: bare first names live here,
+            # and the real 2026-08-31 "Dustin" leak was exactly this shape.
+            print("\n" + "-" * 70)
+            print("⚠️  LEAK GUARD: review-tier hits — LOOK BEFORE DEPLOYING")
+            print(out[:1500])
+            print("-" * 70)
         else:
-            print(r.stdout.strip().splitlines()[-1] if r.stdout.strip()
-                  else "leak guard: clean")
+            print(out.splitlines()[-1] if out else "leak guard: clean")
     except Exception as e:                      # never let the guard break a build
         print(f"⚠️  leak guard did not run ({e}) — check by hand before deploying")
 
