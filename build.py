@@ -35,6 +35,8 @@ USAGE:  python3 build.py          # writes every page to the site root
 import hashlib
 import pathlib
 import re
+import html
+import json
 import sys
 
 ROOT = pathlib.Path(__file__).parent
@@ -132,6 +134,41 @@ def business_schema():
     )
 
 
+# ⛔ FAQ schema is GENERATED FROM THE PAGE'S OWN <details> BLOCKS, never authored
+# here. Google requires FAQPage markup to describe content the visitor can
+# actually see, so deriving it from the rendered content satisfies that by
+# construction rather than by promise. If a content file has no <details>, the
+# page simply gets no FAQPage node. Never hand-write Q&A copy into this file.
+# Added 2026-09-03 (loop L1068): the money pages carried 9 visible Q&As each
+# and none of it was marked up, so an AI engine had no citable passage to lift.
+def faq_node(slug):
+    f = CONTENT / f"{slug}.html"
+    if not f.exists():
+        return None
+    body = f.read_text()
+    qas = []
+    for m in re.finditer(r"<details[^>]*>(.*?)</details>", body, re.S):
+        blk = m.group(1)
+        sm = re.search(r"<summary[^>]*>(.*?)</summary>", blk, re.S)
+        if not sm:
+            continue
+        def clean(s):
+            s = re.sub(r"<[^>]+>", " ", s)
+            return re.sub(r"\s+", " ", html.unescape(s)).strip()
+        q = clean(sm.group(1))
+        a = clean(re.sub(r"<summary.*?</summary>", "", blk, flags=re.S))
+        if q and a:
+            qas.append((q, a))
+    if not qas:
+        return None
+    ent = ",".join(
+        '{"@type":"Question","name":%s,"acceptedAnswer":{"@type":"Answer","text":%s}}'
+        % (json.dumps(q, ensure_ascii=False), json.dumps(a, ensure_ascii=False))
+        for q, a in qas)
+    return '{"@type":"FAQPage","@id":"%s/%s#faq","mainEntity":[%s]}' % (
+        CANONICAL, "" if slug == "index" else f"{slug}.html", ent)
+
+
 def schema_block(slug, service):
     """One @graph per page: the business, plus a Service node where the page is
     a money service. Service.provider points at the business @id so every page
@@ -147,6 +184,9 @@ def schema_block(slug, service):
             f'"areaServed":{{"@type":"City","name":"Vernon"}},'
             f'"url":"{CANONICAL}/{slug}.html"}}'
         )
+    fq = faq_node(slug)
+    if fq:
+        nodes.append(fq)
     graph = ",".join(nodes)
     return ('\n<script type="application/ld+json">'
             f'{{"@context":"https://schema.org","@graph":[{graph}]}}'

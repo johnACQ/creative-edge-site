@@ -1,0 +1,192 @@
+[
+ {
+  "page": "home",
+  "pageId": "uMwm8b3eoEhdY4P57PUD",
+  "title": "Outdoor Living Design & Build | Creative Edge, Vernon BC",
+  "desc": "Creative Edge designs and builds outdoor living across Vernon and the North Okanagan. Pools, retaining walls, hardscape, planting and lighting, all by one crew. Twenty years. Book a free design consult.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/",
+  "schemaFile": "home_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "Outdoor Living Design & Build "
+ },
+ {
+  "page": "outdoor-living",
+  "pageId": "ctf5Zj8JoPUSL3PrqlO8",
+  "title": "Outdoor Living Spaces Vernon BC | Kitchens, Firepits, Lighting",
+  "desc": "Outdoor kitchens, firepits, patios and lighting designed as one space. Vernon and the North Okanagan, designed and built by one crew.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/outdoor-living.html",
+  "schemaFile": "outdoor-living_schema.json",
+  "schemaType": "Service",
+  "titleMarker": "Outdoor Living Spaces Vernon B"
+ },
+ {
+  "page": "retaining-walls",
+  "pageId": "HB0RNt6UGJ2Shou7aTGC",
+  "title": "Retaining Walls Vernon BC | Engineered, Drained, Built to Hold",
+  "desc": "Retaining walls built with the drainage and base most quotes leave out. Serving Vernon and the North Okanagan.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/retaining-walls.html",
+  "schemaFile": "retaining-walls_schema.json",
+  "schemaType": "Service",
+  "titleMarker": "Retaining Walls Vernon BC | En"
+ },
+ {
+  "page": "about",
+  "pageId": "NAfziNnbJInZEWOoWnVB",
+  "title": "About Creative Edge Outdoor Living | Vernon BC Design-Build Crew",
+  "desc": "Blaine Cusack took the Landscape Architecture Tech program at NAIT in 2002 and spent two decades building yards before moving to the Okanagan. Meet the crew who design, build and maintain your outdoor space.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/about.html",
+  "schemaFile": "about_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "About Creative Edge Outdoor Li"
+ },
+ {
+  "page": "services",
+  "pageId": "l653IASsVF1Iwc7jrtJU",
+  "title": "Landscaping Services in Vernon BC | Design, Build, Maintain",
+  "desc": "Eight services under one roof: landscape design, full build, maintenance, softscaping, landscape lighting, pools, spas and cold plunges. One crew from first call to finished yard.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/services.html",
+  "schemaFile": "services_schema.json",
+  "schemaType": "Service",
+  "titleMarker": "Landscaping Services in Vernon"
+ },
+ {
+  "page": "design",
+  "pageId": "PFXkZtGyLeKGCgFoMptU",
+  "title": "Landscape Design Packages | 2D & 3D Plans, Vernon BC",
+  "desc": "See your whole yard in 2D and 3D before anyone digs. Seven design packages from a single small space to a full property plan, each with planting, hardscape and lighting.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/design.html",
+  "schemaFile": "design_schema.json",
+  "schemaType": "Service",
+  "titleMarker": "Landscape Design Packages | 2D"
+ },
+ {
+  "page": "our-work",
+  "pageId": "JgkncEOwZDER1SB7Efwo",
+  "title": "Our Work | Landscape Projects in Vernon & the North Okanagan",
+  "desc": "Completed pools, retaining walls, outdoor kitchens, putting greens and water features across Vernon and the North Okanagan. Design renders and finished builds.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/our-work.html",
+  "schemaFile": "our-work_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "Our Work | Landscape Projects "
+ },
+ {
+  "page": "commercial",
+  "pageId": "s9zSd8jNa89dLGe80TWs",
+  "title": "Commercial Landscaping Vernon BC | Strata, Office & Multi-Unit",
+  "desc": "Commercial landscape design, construction and maintenance for strata, office and multi-unit properties across Vernon and the North Okanagan. One crew, scheduled work, one contact.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/commercial.html",
+  "schemaFile": "commercial_schema.json",
+  "schemaType": "Service",
+  "titleMarker": "Commercial Landscaping Vernon "
+ },
+ {
+  "page": "contact",
+  "pageId": "CmyJXPOaxtQ1t849El1q",
+  "title": "Contact Creative Edge Outdoor Living | Vernon BC",
+  "desc": "Call (250) 812 6112 or send us your project. We get back to you the same working day. Serving Vernon, Coldstream, Lavington, Armstrong, Enderby, Lumby, Salmon Arm and Sicamous.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/contact.html",
+  "schemaFile": "contact_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "Contact Creative Edge Outdoor "
+ },
+ {
+  "page": "blog",
+  "pageId": "zXVPHJC5uIj03ek6PyaF",
+  "title": "Landscaping Advice for Okanagan Homeowners | Creative Edge",
+  "desc": "Straight answers on landscape design, pools, retaining walls and what things actually cost in Vernon and the North Okanagan.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/blog.html",
+  "schemaFile": "blog_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "Landscaping Advice for Okanaga"
+ },
+ {
+  "page": "blog/immerspa-pools-spas",
+  "pageId": "c5ssUyXZ4uCOWpz5FLlt",
+  "title": "ImmerSpa Pools, Spas & Cold Plunges | Creative Edge Outdoor Living",
+  "desc": "We are an authorized ImmerSpa distributor and certified installer. What that means for your pool, spa or cold plunge in the Okanagan.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/blog-immerspa-pools-spas.html",
+  "schemaFile": "blog__immerspa-pools-spas_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "ImmerSpa Pools, Spas & Cold Pl"
+ },
+ {
+  "page": "blog/landscape-design-vernon",
+  "pageId": "B6OM6e6qhQA6NJAg6NLj",
+  "title": "Landscape Design & Outdoor Living in Vernon BC | Creative Edge",
+  "desc": "What actually makes a landscape project work in the North Okanagan: drainage, sun, slope and how you really use the space.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/blog-landscape-design-vernon.html",
+  "schemaFile": "blog__landscape-design-vernon_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "Landscape Design & Outdoor Liv"
+ },
+ {
+  "page": "blog/spring-garden-refresh",
+  "pageId": "IlBoSBCjExkJBXT5FGoq",
+  "title": "Spring Garden Refresh: 5 Design Ideas for Your Okanagan Home",
+  "desc": "Five things worth doing to an Okanagan yard in spring, and the one most people skip until it becomes expensive.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/blog-spring-garden-refresh.html",
+  "schemaFile": "blog__spring-garden-refresh_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "Spring Garden Refresh: 5 Desig"
+ },
+ {
+  "page": "privacy-policy",
+  "pageId": "CiyVEisMw5Af3C6He5xr",
+  "title": "Privacy Policy | Creative Edge Landscaping Ltd.",
+  "desc": "How Creative Edge Landscaping Ltd. collects, uses and stores the information you send through this website.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/privacy-policy.html",
+  "schemaFile": "privacy-policy_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "Privacy Policy | Creative Edge"
+ },
+ {
+  "page": "terms",
+  "pageId": "qFmowTorx9fZ8Dw0lVkK",
+  "title": "Terms of Use | Creative Edge Landscaping Ltd.",
+  "desc": "The terms that cover your use of the Creative Edge Outdoor Living website. Not a contract for landscaping work.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/terms.html",
+  "schemaFile": "terms_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "Terms of Use | Creative Edge L"
+ },
+ {
+  "page": "thank-you",
+  "pageId": "APIGfvLm46Vqb1OUhz1T",
+  "title": "Thanks, we have your details | Creative Edge Outdoor Living",
+  "desc": "Your enquiry is in. We call back the same working day.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/thank-you.html",
+  "schemaFile": "thank-you_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "Thanks, we have your details |"
+ },
+ {
+  "page": "lp-pools",
+  "pageId": "17yRXO47dt4EwK0BfLLi",
+  "title": "Pool & Backyard Design, Vernon BC | Creative Edge Outdoor Living",
+  "desc": "Custom pools designed into the whole yard. Free design consult, Vernon and the North Okanagan.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/lp-pools.html",
+  "schemaFile": "lp-pools_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "Pool & Backyard Design, Vernon"
+ },
+ {
+  "page": "lp-outdoor-living",
+  "pageId": "Lae8MSlp045HucTD8IwN",
+  "title": "Outdoor Living Spaces, Vernon BC | Creative Edge",
+  "desc": "Outdoor kitchens, firepits and lighting designed as one space. Free design consult.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/lp-outdoor-living.html",
+  "schemaFile": "lp-outdoor-living_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "Outdoor Living Spaces, Vernon "
+ },
+ {
+  "page": "lp-retaining-walls",
+  "pageId": "7ZCwmTEzDPnOhgHchWKM",
+  "title": "Retaining Walls, Vernon BC | Creative Edge Outdoor Living",
+  "desc": "Retaining walls built to hold. Free design consult, Vernon and the North Okanagan.",
+  "canonical": "https://creativeedgeoutdoorliving.ca/lp-retaining-walls.html",
+  "schemaFile": "lp-retaining-walls_schema.json",
+  "schemaType": "HomeAndConstructionBusiness",
+  "titleMarker": "Retaining Walls, Vernon BC | C"
+ }
+]
