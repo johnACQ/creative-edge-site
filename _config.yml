@@ -1,2 +1,25 @@
+# GitHub Pages / Jekyll config for creativeedgeoutdoorliving.ca
+#
+# Every page on this site is PRE-BUILT static HTML written by _build/build.py.
+# Jekyll does no templating here; it only decides what gets copied to the
+# published site.
+#
+# ⛔ THE RULE: build source lives in _build/ and is NEVER published.
+# Jekyll ignores any directory whose name starts with an underscore, so this
+# holds by convention and needs no maintenance. That replaced the old
+# `exclude: [build]` list, which only protected files somebody remembered to
+# name: build.py happened to be caught by prefix matching, registry.py was not,
+# and registry.py was served publicly at /registry.py from launch until
+# 2026-09-04 - exposing Apex's internal build notes on the client's own domain.
+#
+# ⛔ Do not move build.py, registry.py or content/ back to the repo root.
+# ⛔ Do not add .nojekyll: it disables Jekyll entirely, which would remove this
+# protection and publish the whole build source.
+#
+# The excludes below are belt and braces for things that are not underscore
+# prefixed. Adding to this list is a fallback, not the mechanism.
 exclude:
-  - build
+  - "*.py"
+  - "*.pyc"
+  - __pycache__
+  - .gitignore

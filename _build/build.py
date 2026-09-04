@@ -39,8 +39,19 @@ import html
 import json
 import sys
 
-ROOT = pathlib.Path(__file__).parent
-CONTENT = ROOT / "build" / "content"
+# ⛔ PATHS, changed 2026-09-04. The build source now lives in _build/ and this
+# file sits inside it, so ROOT must climb one level to reach the repo root that
+# GitHub Pages actually publishes. WHY IT MOVED: registry.py was being served
+# publicly at creativeedgeoutdoorliving.ca/registry.py, exposing Apex's internal
+# build notes on the client's own domain. The old guard was `exclude: [build]`
+# in _config.yml, which only ever protected files somebody remembered to name -
+# build.py was caught by prefix luck, registry.py never was. Jekyll ignores ANY
+# directory starting with an underscore, so everything under _build/ is now
+# unpublishable by convention rather than by a list that needs maintaining.
+# ⛔ Do not move build source back to the repo root.
+ROOT = pathlib.Path(__file__).parent.parent   # repo root = what Pages serves
+SRC = pathlib.Path(__file__).parent           # _build/, never published
+CONTENT = SRC / "content"
 
 
 def asset(rel):
