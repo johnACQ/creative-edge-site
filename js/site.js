@@ -85,12 +85,13 @@
        ⛔ This makes CE's form change TWICE inside one measurement window (Aug 21 cut,
        Aug 23 restore) — the Sep 3 per-LP read needs BOTH dates as breakpoints (L0195).
        timeframe stays optional. */
-    if(!this.name.value||!this.phone.value||!this.email.value||!reason||!town){
+    /* ADDRESS required 2026-09-06, Brad's ask (L1154): street address so he can look at the property before he calls. */
+    if(!this.name.value||!this.phone.value||!this.email.value||!this.address.value||!reason||!town){
       this.reportValidity&&this.reportValidity();return;}
     function getC(n){var v=('; '+document.cookie).split('; '+n+'=');return v.length===2?v.pop().split(';').shift():'';}
     var eid='ce-'+Date.now()+'-'+Math.floor(Math.random()*1e6);       // shared id: browser + server dedupe
     var payload={name:this.name.value,phone:this.phone.value,email:this.email.value,
-      town:town,reason:reason,timeframe:timeframe,
+      address:this.address.value.trim(),town:town,reason:reason,timeframe:timeframe,
       page:(location.pathname.split('/').pop()||'lp').replace('.html',''),
       gclid:getC('_gclid'),wbraid:getC('_wbraid'),gbraid:getC('_gbraid'),
       fbp:getC('_fbp'),fbc:getC('_fbc'),event_id:eid,source:(location.pathname.split('/').pop()||'').indexOf('lp-')===0?'meta-lp':'website',
@@ -107,7 +108,7 @@
         email:this.email.value.trim(),
         phone_number:this.phone.value.trim(),
         address:{first_name:(sp>0?nm.slice(0,sp):nm),last_name:(sp>0?nm.slice(sp+1):''),
-                 city:town,country:'CA'}
+                 street:this.address.value.trim(),city:town,country:'CA'}
       });
     }catch(_){}
     try{gtag('event','conversion',{send_to:'AW-18360839838/TmuOCMTW7dkcEJ7dkLNE'});}catch(_){}
