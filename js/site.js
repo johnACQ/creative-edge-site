@@ -1,17 +1,10 @@
-// ---- tap-to-call conversion (delegated: covers every tel: link on every page) ----
-  // 53 tel links across the site fired NOTHING before this — gtag was healthy, the taps
-  // were simply never wired, so a caller was invisible to Google Ads while a form fill
-  // was not. Delegated on document so it also catches links rendered later, and so a new
-  // page cannot ship an untracked call button by omission.
-  // Deliberately NOT the `onclick="if(typeof gtag...)"` pattern used elsewhere: that guard
-  // silently no-ops whenever gtag has not arrived yet (see the GHL 10s defer lesson). Here
-  // the tag is in <head> on a static page, and the try/catch fails safe without blocking
-  // the call either way — the tel: navigation is never prevented.
+// Record phone taps separately from accepted form leads.
+// GA4-only: a tap does not prove a connected call. Preserve tel: navigation.
   (function(){
     document.addEventListener('click', function(e){
       var a = e.target && e.target.closest ? e.target.closest('a[href^="tel:"]') : null;
       if(!a) return;
-      try{ gtag('event','conversion',{send_to:'AW-18360839838/TmuOCMTW7dkcEJ7dkLNE'}); }catch(_){}
+      try{ gtag('event','phone_click',{send_to:'G-0YEVFG52V0'}); }catch(_){}
     }, true);
   })();
 
@@ -71,8 +64,9 @@
   })();
 
   var leadForm=document.getElementById('lead');
-  if(leadForm) leadForm.addEventListener('submit',function(e){
+  if(leadForm) leadForm.addEventListener('submit',async function(e){
     e.preventDefault();
+    if(this.dataset.submitting==='true') return;
     if(this.company && this.company.value){return;}                  // honeypot -> drop bots
     function val(n){var el=this.querySelector('[name="'+n+'"]');return el?el.value:'';}
     val=val.bind(this);
@@ -96,6 +90,35 @@
       gclid:getC('_gclid'),wbraid:getC('_wbraid'),gbraid:getC('_gbraid'),
       fbp:getC('_fbp'),fbc:getC('_fbc'),event_id:eid,source:(location.pathname.split('/').pop()||'').indexOf('lp-')===0?'meta-lp':'website',
       utm_source:getC('_utm_source'),utm_medium:getC('_utm_medium'),utm_campaign:getC('_utm_campaign')};
+    // Confirm lead acceptance before showing success or counting a conversion.
+    var form=this, submitButton=this.querySelector('[type="submit"]');
+    var error=this.querySelector('.fc-submit-error');
+    if(!error){
+      error=document.createElement('div');
+      error.className='fc-err fc-submit-error';
+      error.setAttribute('role','alert');
+      submitButton.insertAdjacentElement('afterend',error);
+    }
+    error.classList.remove('on');
+    this.dataset.submitting='true';
+    submitButton.disabled=true;
+    try{
+      var response=await fetch('https://profound-truth-production-4190.up.railway.app/webhook/creative_edge/lp-lead',
+        {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),keepalive:true});
+      var result=await response.json();
+      if(!response.ok || result.status!=='ok' || !result.contact_id){
+        throw new Error(result.error==='invalid_phone'?'invalid_phone':'not_accepted');
+      }
+    }catch(err){
+      error.textContent=err.message==='invalid_phone'
+        ? 'Please check your phone number and try again.'
+        : "We couldn't send your enquiry. Please try again, or call (250) 812 6112.";
+      error.classList.add('on');
+      return;
+    }finally{
+      form.dataset.submitting='false';
+      submitButton.disabled=false;
+    }
     // (1) browser signal — Google live (conv action 7704636228).
     // Meta browser-side stays PageView-only BY DESIGN: `Lead` fires server-side via
     // Railway CAPI on qualified submits (event_id above is the dedupe key if that
@@ -122,10 +145,6 @@
     try{gtag('event','generate_lead',{send_to:'G-0YEVFG52V0',event_id:eid,
       page:(location.pathname.split('/').pop()||'index').replace(/\.html$/,''),
       value:0,currency:'CAD'});}catch(_){}
-    // (2) server side -> Railway: honeypot + phone validate -> GHL upsert + speed-to-lead -> CAPI Lead (hashed)
-    // Endpoint is LIVE and verified end to end (Jul 31 2026): POST -> GHL contact.
-    try{fetch('https://profound-truth-production-4190.up.railway.app/webhook/creative_edge/lp-lead',
-      {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),keepalive:true});}catch(_){}
     // (3) thank you
     this.style.display='none';
     // #done lives next to the form. Guard it: a page that ships a form without
