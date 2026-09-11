@@ -327,6 +327,21 @@ def footer(with_nav=True):
 </footer>"""
 
 
+# ⛔ HTML comments NEVER reach the served page (L1489, 2026-09-11). The content
+# sources carry internal notes — held-back testimonials, photo provenance,
+# copyright status, dollar figures — and every one of them was shipping inside
+# the public HTML of the ad landing pages. Notes stay in _build/content where
+# they are useful; the build drops them. Whole-line comments take their line
+# with them so the output does not fill with blank lines.
+_COMMENT_LINE = re.compile(r"^[ \t]*<!--.*?-->[ \t]*\n?", re.S | re.M)
+_COMMENT_INLINE = re.compile(r"<!--.*?-->", re.S)
+
+
+def strip_comments(html):
+    html = _COMMENT_LINE.sub("", html)
+    return _COMMENT_INLINE.sub("", html)
+
+
 def build_page(slug, title, desc, robots="index,follow", nav=True, service=None):
     body = (CONTENT / f"{slug}.html").read_text()
     parts = [
@@ -337,7 +352,7 @@ def build_page(slug, title, desc, robots="index,follow", nav=True, service=None)
         footer(with_nav=nav),
         f'<script src="{asset("js/site.js")}" defer></script>\n</body>\n</html>',
     ]
-    return "\n".join(parts) + "\n"
+    return strip_comments("\n".join(parts) + "\n")
 
 
 def main():
