@@ -127,14 +127,18 @@
     // Google hashes them client-side. Email is the strongest key; phone + name/city back it up.
     try{
       var nm=this.name.value.trim(), sp=nm.indexOf(' ');
+      // Match the handler's accepted Canadian/NANP phone format (E.164).
+      var phoneDigits=this.phone.value.replace(/\D/g,'');
+      var ecPhone=phoneDigits.length===10?'+1'+phoneDigits:
+        (phoneDigits.length===11&&phoneDigits.charAt(0)==='1'?'+'+phoneDigits:'');
       gtag('set','user_data',{
-        email:this.email.value.trim(),
-        phone_number:this.phone.value.trim(),
+        email:this.email.value.trim().toLowerCase(),
+        phone_number:ecPhone,
         address:{first_name:(sp>0?nm.slice(0,sp):nm),last_name:(sp>0?nm.slice(sp+1):''),
                  street:this.address.value.trim(),city:town,country:'CA'}
       });
     }catch(_){}
-    try{gtag('event','conversion',{send_to:'AW-18360839838/TmuOCMTW7dkcEJ7dkLNE'});}catch(_){}
+    try{gtag('event','conversion',{send_to:'AW-18360839838/TmuOCMTW7dkcEJ7dkLNE',transaction_id:eid});}catch(_){}
     /* GA4 generate_lead. Added 2026-08-20 — it was missing, so Google ADS could see
        leads and GA4 could not, and the funnel had no terminal event. That makes
        "zero leads" and "we cannot see leads" produce identical output, which is
