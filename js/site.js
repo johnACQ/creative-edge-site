@@ -157,3 +157,22 @@
     if(d){d.classList.add('on'); d.scrollIntoView({behavior:'smooth',block:'center'});}
     else{location.href='thank-you.html';}
   });
+
+/* A0.1 (2026-09-12): on phones the hero CTA opens the form-card as a full-screen overlay; desktop scrolls to it.
+   No DOM move - the two-step logic, honeypot, gclid cookie and submit handler above are untouched. */
+function a01OpenForm(e){
+  if(e){e.preventDefault();e.stopPropagation();}
+  var f=document.querySelector('form.form-card');
+  if(window.innerWidth>860){ if(f){ try{f.scrollIntoView({behavior:'smooth',block:'center'});}catch(_){} } return false; }
+  document.documentElement.classList.add('a01-open');
+  var col=document.querySelector('.h-form'); if(col) col.scrollTop=0;
+  try{ if(typeof gtag!=='undefined') gtag('event','a01_form_open'); }catch(_){}
+  return false;
+}
+function a01CloseForm(){ document.documentElement.classList.remove('a01-open'); }
+document.addEventListener('click',function(ev){
+  var a=ev.target&&ev.target.closest?ev.target.closest('a[href="#lead"]'):null;
+  if(a&&a.id!=='a01Cta'&&window.innerWidth<=860&&document.querySelector('.a01-media')){ a01OpenForm(ev); }
+},true);
+document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') a01CloseForm(); });
+
