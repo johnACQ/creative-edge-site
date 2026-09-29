@@ -51,7 +51,7 @@ PAGES = [
 
     dict(slug="contact",
          title="Contact Creative Edge Outdoor Living | Vernon BC",
-         desc="Call (250) 812 6112 or send us your project. We get back to you the same working day. Serving Vernon, Coldstream, Lavington, Armstrong, Enderby, Lumby, Salmon Arm and Sicamous."),
+         desc="Call (250) 812 6112 or send us your project. We get back to you the same working day. Serving Vernon, Coldstream, Lavington, Armstrong, Enderby, Lumby, Salmon Arm, Sicamous, Kamloops, Kelowna and Penticton."),
 
     # ---- service detail pages (linked from Services, not in nav) ---------
     dict(slug="retaining-walls",

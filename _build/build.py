@@ -84,12 +84,14 @@ IG = "https://www.instagram.com/creative_edge_landscaping_/"
 # the only thing that actually blocks it. Do not trust the robots.txt file.
 STAGING = False
 
-# The 8 locked towns. Kelowna, Peachland and Kamloops are DELIBERATELY ABSENT —
-# one-trade-per-town is a public term and Kelowna is another client's territory.
-# The old WordPress site advertised all three; dropping them is intentional.
-# See okanagan_territory_lock_kdt_creative_edge_jul29. Do not re-add.
+# The 8 core towns, plus Kamloops, Kelowna and Penticton added 2026-09-29 on
+# JOHN'S EXPLICIT OVERRIDE of the Jul 29 territory lock (asked with the lock quoted:
+# Kelowna and Penticton are KDT's under okanagan_territory_lock_kdt_creative_edge_jul29,
+# and one-trade-per-town is a public term; John chose "Override the lock", loop L1505).
+# Matches Brad's red line. Peachland stays out. Do not change without John.
 TOWNS = ["Vernon", "Coldstream", "Lavington", "Armstrong",
-         "Enderby", "Lumby", "Salmon Arm", "Sicamous"]
+         "Enderby", "Lumby", "Salmon Arm", "Sicamous",
+         "Kamloops", "Kelowna", "Penticton"]
 
 # Nav is the source of truth for site structure. Order matches his old site's
 # nav, with Commercial added. Mobile nav is a horizontal scroller, so the extra
