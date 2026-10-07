@@ -126,9 +126,25 @@ CANONICAL = "https://creativeedgeoutdoorliving.ca"
 # structured-data penalty. It goes in when real reviews exist, not before.
 # ⛔ NO streetAddress: he is a service-area business, address hidden on GBP
 # (N6.4). addressLocality/Region/Country only, plus areaServed.
+# ⛔ There is NO schema.org "LandscapingBusiness" type (schema.org/LandscapingBusiness
+# is a 404, checked 2026-10-07). LocalBusiness + HomeAndConstructionBusiness is the
+# correct, valid pair. Do not "upgrade" it to an invented type.
+#
+# HOURS + MAP are copied from the LIVE managed GBP, locations/10351585789769486524
+# [v 2026-10-07 Business Information API: regularHours Mon-Fri 08:00-17:00,
+# metadata.mapsUri cid=12302154222517633781]. Schema must agree with GBP, so if the
+# GBP hours change, change OPENING_DAYS/HOURS here in the same session.
+GBP_MAPS_URI = "https://maps.google.com/maps?cid=12302154222517633781"
+OPENING_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+OPENING_HOURS = ("08:00", "17:00")
+
+
+def towns_json():
+    return ",".join('{"@type":"City","name":"%s"}' % t for t in TOWNS)
+
+
 def business_schema():
-    towns = ",".join(
-        '{"@type":"City","name":"%s"}' % t for t in TOWNS)
+    days = ",".join(f'"{d}"' for d in OPENING_DAYS)
     return (
         '{"@type":["LocalBusiness","HomeAndConstructionBusiness"],'
         f'"@id":"{CANONICAL}/#business",'
@@ -141,10 +157,47 @@ def business_schema():
         f'"logo":"{CANONICAL}/img/ce-wordmark-1200.png",'
         '"address":{"@type":"PostalAddress","addressLocality":"Vernon",'
         '"addressRegion":"BC","addressCountry":"CA"},'
-        f'"areaServed":[{towns}],'
+        f'"areaServed":[{towns_json()}],'
+        '"openingHoursSpecification":[{"@type":"OpeningHoursSpecification",'
+        f'"dayOfWeek":[{days}],"opens":"{OPENING_HOURS[0]}","closes":"{OPENING_HOURS[1]}"}}],'
+        f'"hasMap":"{GBP_MAPS_URI}",'
         '"founder":{"@type":"Person","name":"Blaine Cusack"},'
         f'"sameAs":["{IG}"]}}'
     )
+
+
+# BREADCRUMBS (added 2026-10-07). Parent of each indexable inner page. Pages not
+# listed hang straight off Home. Names come from the nav label or the page's own
+# title, so the trail never names something the visitor cannot see.
+CRUMB_PARENT = {
+    "retaining-walls": "services",
+    "outdoor-living": "services",
+    "blog-landscape-design-vernon": "blog",
+    "blog-immerspa-pools-spas": "blog",
+    "blog-spring-garden-refresh": "blog",
+}
+
+
+def crumb_name(slug, title):
+    for h, label in NAV:
+        if h == f"{slug}.html":
+            return html.unescape(label)
+    return html.unescape(title.split(" | ")[0]).strip()
+
+
+def breadcrumb_node(slug, title, titles):
+    trail = [("Home", f"{CANONICAL}/")]
+    parent = CRUMB_PARENT.get(slug)
+    if parent:
+        trail.append((crumb_name(parent, titles.get(parent, parent)),
+                      f"{CANONICAL}/{parent}.html"))
+    trail.append((crumb_name(slug, title), f"{CANONICAL}/{slug}.html"))
+    items = ",".join(
+        '{"@type":"ListItem","position":%d,"name":%s,"item":"%s"}'
+        % (i + 1, json.dumps(n, ensure_ascii=False), u)
+        for i, (n, u) in enumerate(trail))
+    return ('{"@type":"BreadcrumbList","@id":"%s/%s.html#breadcrumb",'
+            '"itemListElement":[%s]}' % (CANONICAL, slug, items))
 
 
 # ⛔ FAQ schema is GENERATED FROM THE PAGE'S OWN <details> BLOCKS, never authored
@@ -182,10 +235,13 @@ def faq_node(slug):
         CANONICAL, "" if slug == "index" else f"{slug}.html", ent)
 
 
-def schema_block(slug, service):
+def schema_block(slug, service, crumbs=None):
     """One @graph per page: the business, plus a Service node where the page is
     a money service. Service.provider points at the business @id so every page
-    reinforces one entity instead of minting nine unrelated businesses."""
+    reinforces one entity instead of minting nine unrelated businesses.
+    2026-10-07: Service.areaServed now carries the same town list as the
+    business (it said Vernon only), and indexable inner pages get a
+    BreadcrumbList."""
     nodes = [business_schema()]
     if service:
         name, stype = service
@@ -194,12 +250,14 @@ def schema_block(slug, service):
             f'"@id":"{CANONICAL}/{slug}.html#service",'
             f'"name":"{name}","serviceType":"{stype}",'
             f'"provider":{{"@id":"{CANONICAL}/#business"}},'
-            f'"areaServed":{{"@type":"City","name":"Vernon"}},'
+            f'"areaServed":[{towns_json()}],'
             f'"url":"{CANONICAL}/{slug}.html"}}'
         )
     fq = faq_node(slug)
     if fq:
         nodes.append(fq)
+    if crumbs:
+        nodes.append(crumbs)
     graph = ",".join(nodes)
     return ('\n<script type="application/ld+json">'
             f'{{"@context":"https://schema.org","@graph":[{graph}]}}'
@@ -344,10 +402,14 @@ def strip_comments(html):
     return _COMMENT_INLINE.sub("", html)
 
 
-def build_page(slug, title, desc, robots="index,follow", nav=True, service=None):
+def build_page(slug, title, desc, robots="index,follow", nav=True, service=None,
+               titles=None):
     body = (CONTENT / f"{slug}.html").read_text()
+    crumbs = None
+    if titles is not None and slug != "index" and "noindex" not in robots:
+        crumbs = breadcrumb_node(slug, title, titles)
     parts = [
-        head(title, desc, robots, schema_block(slug, service),
+        head(title, desc, robots, schema_block(slug, service, crumbs),
              canon=f"{CANONICAL}/" if slug == "index" else f"{CANONICAL}/{slug}.html"),
         header(f"{slug}.html", nav=nav),
         body.rstrip(),
@@ -361,12 +423,14 @@ def main():
     check = "--check" in sys.argv
     import registry
     written, drift = 0, []
+    titles = {s["slug"]: s["title"] for s in registry.PAGES}
     for spec in registry.PAGES:
         out = ROOT / f"{spec['slug']}.html"
         html = build_page(spec["slug"], spec["title"], spec["desc"],
                           spec.get("robots", "index,follow"),
                           spec.get("nav", True),
-                          spec.get("service"))
+                          spec.get("service"),
+                          titles=titles)
         if check:
             if not out.exists() or out.read_text() != html:
                 drift.append(spec["slug"])
@@ -382,13 +446,32 @@ def main():
     # Only pages the registry actually lets Google index. The paid LPs, the
     # thank-you page and the legal pages are noindex on purpose — listing them
     # here would contradict their own meta tag and waste crawl budget.
+    # lastmod (added 2026-10-07) = the last COMMIT date of the page's content
+    # source, never the build date. A build touches every file, so the build
+    # date would claim every page changed on every run, and Google learns to
+    # ignore a lastmod that always moves. Uncommitted / untracked -> omitted.
+    import subprocess
+
+    def lastmod(slug):
+        try:
+            r = subprocess.run(
+                ["git", "-C", str(ROOT), "log", "-1", "--format=%cs", "--",
+                 f"_build/content/{slug}.html"],
+                capture_output=True, text=True, timeout=20)
+            d = r.stdout.strip()
+            return d if re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) else None
+        except Exception:
+            return None
+
     urls = []
     for spec in registry.PAGES:
         if "noindex" in spec.get("robots", "index,follow"):
             continue
         slug = spec["slug"]
         loc = f"{CANONICAL}/" if slug == "index" else f"{CANONICAL}/{slug}.html"
-        urls.append(f"  <url><loc>{loc}</loc>"
+        lm = lastmod(slug)
+        lm_tag = f"<lastmod>{lm}</lastmod>" if lm else ""
+        urls.append(f"  <url><loc>{loc}</loc>{lm_tag}"
                     f"<priority>{'1.0' if slug == 'index' else '0.8'}</priority></url>")
     (ROOT / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
