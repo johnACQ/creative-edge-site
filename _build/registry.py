@@ -14,7 +14,7 @@ over as unlinked-from-nav utility pages, same as his site.
 PAGES = [
     # ---- the 9 nav pages -------------------------------------------------
     dict(slug="index",
-         title="Outdoor Living Design &amp; Build | Creative Edge, Vernon BC",
+         title="Landscaping in Vernon BC | Design &amp; Build | Creative Edge",
          desc="Creative Edge designs and builds outdoor living across Vernon and the North Okanagan. Pools, retaining walls, hardscape, planting and lighting, all by one crew. Twenty years. Book a free design consult."),
 
     dict(slug="about",
