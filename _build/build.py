@@ -175,6 +175,8 @@ CRUMB_PARENT = {
     "blog-landscape-design-vernon": "blog",
     "blog-immerspa-pools-spas": "blog",
     "blog-spring-garden-refresh": "blog",
+    "blog-retaining-walls-why-they-fail": "blog",
+    "blog-pool-planning-next-summer": "blog",
 }
 
 

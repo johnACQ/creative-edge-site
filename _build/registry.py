@@ -65,6 +65,14 @@ PAGES = [
          desc="Outdoor kitchens, firepits, patios and lighting designed as one space. Vernon and the North Okanagan, designed and built by one crew."),
 
     # ---- blog posts ------------------------------------------------------
+    dict(slug="blog-retaining-walls-why-they-fail",
+         title="Why Retaining Walls Fail, and What to Ask Before You Sign | Creative Edge",
+         desc="Most retaining walls fail at the base or the drainage. Five questions to ask whoever quotes your wall in Vernon and the North Okanagan, before you sign."),
+
+    dict(slug="blog-pool-planning-next-summer",
+         title="Want a Pool or Cold Plunge Next Summer? Start in the Fall | Creative Edge",
+         desc="Design, permits and scheduling all happen before anyone digs. Why a fall start gets you in the water next summer in Vernon and the North Okanagan."),
+
     dict(slug="blog-landscape-design-vernon",
          title="Landscape Design &amp; Outdoor Living in Vernon BC | Creative Edge",
          desc="What actually makes a landscape project work in the North Okanagan: drainage, sun, slope and how you really use the space."),
