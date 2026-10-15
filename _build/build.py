@@ -543,6 +543,8 @@ def main():
         lm = content_lastmod(slug)
         if spec.get("date") and (not lm or lm < spec["date"]):
             lm = spec["date"]
+        if slug == "blog" and posts:            # a new card changes the index
+            lm = max(lm or "", max(p["date"] for p in posts))
         lm_tag = f"<lastmod>{lm}</lastmod>" if lm else ""
         urls.append(f"  <url><loc>{loc}</loc>{lm_tag}"
                     f"<priority>{'1.0' if slug == 'index' else '0.8'}</priority></url>")
