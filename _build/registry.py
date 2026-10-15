@@ -65,23 +65,48 @@ PAGES = [
          desc="Outdoor kitchens, firepits, patios and lighting designed as one space. Vernon and the North Okanagan, designed and built by one crew."),
 
     # ---- blog posts ------------------------------------------------------
-    dict(slug="blog-retaining-walls-why-they-fail",
+    # date = the day the post goes live (America/Vancouver). build.py skips any
+    # post dated in the future, so the weekly GitHub Action (.github/workflows/
+    # weekly-blog.yml) publishes a staged post simply by rebuilding on its date.
+    # card = the blog.html index card; the build generates the cards, newest
+    # first. Never hand-edit cards into content/blog.html.
+    dict(slug="blog-retaining-walls-why-they-fail", date="2026-10-07",
+         card=dict(img="img/ce-work-backyard-dusk.jpg", w=1024, h=683,
+                   alt="Two tiers of lit block retaining wall above a lawn and paver path at dusk",
+                   title="Why retaining walls fail, and what to ask before you sign a quote",
+                   excerpt="Almost always it is the base or the drainage, and both are buried by the time the job is done. Five questions to ask whoever quotes your wall."),
          title="Why Retaining Walls Fail, and What to Ask Before You Sign | Creative Edge",
          desc="Most retaining walls fail at the base or the drainage. Five questions to ask whoever quotes your wall in Vernon and the North Okanagan, before you sign."),
 
-    dict(slug="blog-pool-planning-next-summer",
+    dict(slug="blog-pool-planning-next-summer", date="2026-10-07",
+         card=dict(img="img/ce-work-water-night.jpg", w=1024, h=683,
+                   alt="Lit water feature spilling onto river rock at night",
+                   title="Want a pool or cold plunge next summer? Start in the fall",
+                   excerpt="Design, permits and scheduling all happen before anyone digs. Why the fall conversation is the one that gets you in the water for the summer."),
          title="Want a Pool or Cold Plunge Next Summer? Start in the Fall | Creative Edge",
          desc="Design, permits and scheduling all happen before anyone digs. Why a fall start gets you in the water next summer in Vernon and the North Okanagan."),
 
-    dict(slug="blog-landscape-design-vernon",
+    dict(slug="blog-landscape-design-vernon", date="2026-07-31",
+         card=dict(img="img/ce-render-aerial-night.jpg", w=1600, h=900,
+                   alt="Aerial night view of a lit landscape design",
+                   title="Landscape design and outdoor living in Vernon, BC",
+                   excerpt="Why the drawing matters more than the plant list, and the four site conditions that decide whether a yard works here: drainage, sun, slope and how you really use it."),
          title="Landscape Design &amp; Outdoor Living in Vernon BC | Creative Edge",
          desc="What actually makes a landscape project work in the North Okanagan: drainage, sun, slope and how you really use the space."),
 
-    dict(slug="blog-immerspa-pools-spas",
+    dict(slug="blog-immerspa-pools-spas", date="2026-07-31",
+         card=dict(img="img/ce-render-pool-dusk.jpg", w=1600, h=900,
+                   alt="Infinity edge pool at dusk",
+                   title="ImmerSpa pools, spas and cold plunges",
+                   excerpt="We are an authorized ImmerSpa distributor and a certified installer. What that actually means for your pool or plunge, and where a fibreglass unit beats a poured one."),
          title="ImmerSpa Pools, Spas &amp; Cold Plunges | Creative Edge Outdoor Living",
          desc="We are an authorized ImmerSpa distributor and certified installer. What that means for your pool, spa or cold plunge in the Okanagan."),
 
-    dict(slug="blog-spring-garden-refresh",
+    dict(slug="blog-spring-garden-refresh", date="2026-07-31",
+         card=dict(img="img/ce-render-putting-green.jpg", w=1600, h=900,
+                   alt="Putting green with boulders and planting beds",
+                   title="Spring garden refresh: 5 ideas for your Okanagan home",
+                   excerpt="Five things worth doing to a yard in spring, and the one most people put off until it turns into a much bigger bill."),
          title="Spring Garden Refresh: 5 Design Ideas for Your Okanagan Home",
          desc="Five things worth doing to an Okanagan yard in spring, and the one most people skip until it becomes expensive."),
 

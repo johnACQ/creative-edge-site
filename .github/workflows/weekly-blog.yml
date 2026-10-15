@@ -1,0 +1,80 @@
+# Weekly blog publish (added 2026-10-15). Posts are staged ahead of time in
+# _build/registry.py with a date="YYYY-MM-DD" and their body in
+# _build/content/<slug>.html. build.py only renders posts dated today or
+# earlier (Vancouver time), so this Monday rebuild is what makes the next one
+# live: page, blog.html card, sitemap and BlogPosting schema in one commit.
+# Nothing staged for today = nothing changes = no commit.
+name: Weekly blog publish
+
+on:
+  schedule:
+    - cron: "0 15 * * 1"   # Mondays 15:00 UTC (08:00 PDT / 07:00 PST)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: weekly-blog
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # sitemap lastmod reads git history
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"  # build.py needs 3.12+ (f-string syntax)
+
+      - name: Build (date-gated)
+        run: python _build/build.py
+
+      - name: Commit and push if a post went live
+        id: commit
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Nothing staged for today."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Weekly blog publish $(TZ=America/Vancouver date +%F)"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Request a Pages build
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
+
+      # Proof = the served page, not the commit. Fails the run (GitHub emails
+      # the repo owner) if the newest post is not live within 15 minutes.
+      - name: Prove the newest post is served
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          python - <<'PY'
+          import sys, time, urllib.request
+          sys.path.insert(0, "_build")
+          import build, registry
+          live = [p for p in registry.PAGES if p.get("date") and build.is_live(p)]
+          p = max(live, key=lambda p: p["date"])
+          url = f"{build.CANONICAL}/{p['slug']}.html"
+          for _ in range(30):
+              try:
+                  body = urllib.request.urlopen(url, timeout=20).read().decode("utf-8", "ignore")
+                  if "BlogPosting" in body:
+                      print("LIVE", url)
+                      sys.exit(0)
+              except Exception as e:
+                  print("not yet:", e)
+              time.sleep(30)
+          sys.exit(f"NOT LIVE after 15 min: {url}")
+          PY

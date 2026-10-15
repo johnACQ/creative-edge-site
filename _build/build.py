@@ -32,12 +32,16 @@ for him. Do not introduce a runtime build step, a JS framework, or a CDN.
 USAGE:  python3 build.py          # writes every page to the site root
         python3 build.py --check  # verify only, exit 1 on drift
 """
+import datetime
 import hashlib
+import os
 import pathlib
 import re
 import html
 import json
+import subprocess
 import sys
+from zoneinfo import ZoneInfo
 
 # ⛔ PATHS, changed 2026-09-04. The build source now lives in _build/ and this
 # file sits inside it, so ROOT must climb one level to reach the repo root that
@@ -52,6 +56,34 @@ import sys
 ROOT = pathlib.Path(__file__).parent.parent   # repo root = what Pages serves
 SRC = pathlib.Path(__file__).parent           # _build/, never published
 CONTENT = SRC / "content"
+
+# PUBLISH DATES (added 2026-10-15, the weekly blog engine). A registry entry
+# with date="YYYY-MM-DD" exists on the site only from that day on, Vancouver
+# time. Staged posts wait in _build/ (Jekyll never serves an underscore folder)
+# and .github/workflows/weekly-blog.yml rebuilds every Monday morning: that
+# rebuild IS the publish. BUILD_DATE=YYYY-MM-DD overrides "today" for previews.
+TODAY = os.environ.get("BUILD_DATE") or \
+    datetime.datetime.now(ZoneInfo("America/Vancouver")).date().isoformat()
+
+
+def is_live(spec):
+    return spec.get("date", "0000-00-00") <= TODAY
+
+
+def content_lastmod(slug):
+    """Last COMMIT date of a page's content source, never the build date. A
+    build touches every file, so the build date would claim every page changed
+    on every run, and Google learns to ignore a lastmod that always moves.
+    Uncommitted / untracked -> None."""
+    try:
+        r = subprocess.run(
+            ["git", "-C", str(ROOT), "log", "-1", "--format=%cs", "--",
+             f"_build/content/{slug}.html"],
+            capture_output=True, text=True, timeout=20)
+        d = r.stdout.strip()
+        return d if re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) else None
+    except Exception:
+        return None
 
 
 def asset(rel):
@@ -189,7 +221,7 @@ def crumb_name(slug, title):
 
 def breadcrumb_node(slug, title, titles):
     trail = [("Home", f"{CANONICAL}/")]
-    parent = CRUMB_PARENT.get(slug)
+    parent = CRUMB_PARENT.get(slug) or ("blog" if slug.startswith("blog-") else None)
     if parent:
         trail.append((crumb_name(parent, titles.get(parent, parent)),
                       f"{CANONICAL}/{parent}.html"))
@@ -237,7 +269,45 @@ def faq_node(slug):
         CANONICAL, "" if slug == "index" else f"{slug}.html", ent)
 
 
-def schema_block(slug, service, crumbs=None):
+# BlogPosting (added 2026-10-15). Every dated post says what it is, when it
+# went live and who published it. author/publisher point at the business @id so
+# the posts reinforce the one entity. Headline = the card title (Google cuts
+# headlines past 110 chars).
+def blogposting_node(slug, title, desc, post):
+    url = f"{CANONICAL}/{slug}.html"
+    card = post.get("card") or {}
+    headline = card.get("title") or html.unescape(title.split(" | ")[0]).strip()
+    node = {
+        "@type": "BlogPosting", "@id": f"{url}#article",
+        "headline": headline[:110], "description": html.unescape(desc),
+        "datePublished": post["date"],
+        "dateModified": max(post["date"], content_lastmod(slug) or post["date"]),
+        "author": {"@id": f"{CANONICAL}/#business"},
+        "publisher": {"@id": f"{CANONICAL}/#business"},
+        "mainEntityOfPage": {"@id": url}, "inLanguage": "en-CA",
+    }
+    if card.get("img"):
+        node["image"] = f"{CANONICAL}/{card['img']}"
+    return json.dumps(node, ensure_ascii=False)
+
+
+def post_cards(posts):
+    """blog.html index cards, newest first (ties keep registry order)."""
+    def esc(t):
+        return html.escape(t, quote=False).replace('"', "&quot;")
+    out = []
+    for p in sorted(posts, key=lambda p: p["date"], reverse=True):
+        c, href = p["card"], f'{p["slug"]}.html'
+        out.append(
+            '      <div class="svc">\n'
+            f'        <figure class="post-hero" style="margin:0 0 14px"><a href="{href}"><img src="{c["img"]}" width="{c["w"]}" height="{c["h"]}" loading="lazy" alt="{esc(c["alt"])}"></a></figure><div class="t"><a href="{href}">{esc(c["title"])}</a></div>\n'
+            f'        <p>{esc(c["excerpt"])}</p>\n'
+            f'        <p><a class="go" href="{href}">Read it &rarr;</a></p>\n'
+            '      </div>')
+    return "\n".join(out)
+
+
+def schema_block(slug, service, crumbs=None, article=None):
     """One @graph per page: the business, plus a Service node where the page is
     a money service. Service.provider points at the business @id so every page
     reinforces one entity instead of minting nine unrelated businesses.
@@ -260,6 +330,8 @@ def schema_block(slug, service, crumbs=None):
         nodes.append(fq)
     if crumbs:
         nodes.append(crumbs)
+    if article:
+        nodes.append(article)
     graph = ",".join(nodes)
     return ('\n<script type="application/ld+json">'
             f'{{"@context":"https://schema.org","@graph":[{graph}]}}'
@@ -405,13 +477,16 @@ def strip_comments(html):
 
 
 def build_page(slug, title, desc, robots="index,follow", nav=True, service=None,
-               titles=None):
+               titles=None, post=None, cards=None):
     body = (CONTENT / f"{slug}.html").read_text()
+    if "{{POST_CARDS}}" in body:
+        body = body.replace("{{POST_CARDS}}", cards or "")
     crumbs = None
     if titles is not None and slug != "index" and "noindex" not in robots:
         crumbs = breadcrumb_node(slug, title, titles)
+    article = blogposting_node(slug, title, desc, post) if post else None
     parts = [
-        head(title, desc, robots, schema_block(slug, service, crumbs),
+        head(title, desc, robots, schema_block(slug, service, crumbs, article),
              canon=f"{CANONICAL}/" if slug == "index" else f"{CANONICAL}/{slug}.html"),
         header(f"{slug}.html", nav=nav),
         body.rstrip(),
@@ -425,14 +500,20 @@ def main():
     check = "--check" in sys.argv
     import registry
     written, drift = 0, []
-    titles = {s["slug"]: s["title"] for s in registry.PAGES}
-    for spec in registry.PAGES:
+    pages = [s for s in registry.PAGES if is_live(s)]
+    staged = [s["slug"] for s in registry.PAGES if not is_live(s)]
+    posts = [s for s in pages if s.get("date") and s.get("card")]
+    cards = post_cards(posts)
+    titles = {s["slug"]: s["title"] for s in pages}
+    for spec in pages:
         out = ROOT / f"{spec['slug']}.html"
         html = build_page(spec["slug"], spec["title"], spec["desc"],
                           spec.get("robots", "index,follow"),
                           spec.get("nav", True),
                           spec.get("service"),
-                          titles=titles)
+                          titles=titles,
+                          post=spec if spec.get("date") else None,
+                          cards=cards)
         if check:
             if not out.exists() or out.read_text() != html:
                 drift.append(spec["slug"])
@@ -442,36 +523,26 @@ def main():
     if check:
         print(f"drift: {drift}" if drift else "all pages match content sources")
         sys.exit(1 if drift else 0)
-    print(f"built {written} pages")
+    print(f"built {written} pages (as of {TODAY})")
+    if staged:
+        print(f"staged, not live yet: {', '.join(staged)}")
 
     # ---- sitemap.xml -------------------------------------------------------
     # Only pages the registry actually lets Google index. The paid LPs, the
     # thank-you page and the legal pages are noindex on purpose — listing them
     # here would contradict their own meta tag and waste crawl budget.
-    # lastmod (added 2026-10-07) = the last COMMIT date of the page's content
-    # source, never the build date. A build touches every file, so the build
-    # date would claim every page changed on every run, and Google learns to
-    # ignore a lastmod that always moves. Uncommitted / untracked -> omitted.
-    import subprocess
-
-    def lastmod(slug):
-        try:
-            r = subprocess.run(
-                ["git", "-C", str(ROOT), "log", "-1", "--format=%cs", "--",
-                 f"_build/content/{slug}.html"],
-                capture_output=True, text=True, timeout=20)
-            d = r.stdout.strip()
-            return d if re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) else None
-        except Exception:
-            return None
-
+    # lastmod (added 2026-10-07) = content_lastmod(), the content source's last
+    # commit date. A post staged ahead of its date never claims a lastmod
+    # earlier than the day it went live.
     urls = []
-    for spec in registry.PAGES:
+    for spec in pages:
         if "noindex" in spec.get("robots", "index,follow"):
             continue
         slug = spec["slug"]
         loc = f"{CANONICAL}/" if slug == "index" else f"{CANONICAL}/{slug}.html"
-        lm = lastmod(slug)
+        lm = content_lastmod(slug)
+        if spec.get("date") and (not lm or lm < spec["date"]):
+            lm = spec["date"]
         lm_tag = f"<lastmod>{lm}</lastmod>" if lm else ""
         urls.append(f"  <url><loc>{loc}</loc>{lm_tag}"
                     f"<priority>{'1.0' if slug == 'index' else '0.8'}</priority></url>")
