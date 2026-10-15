@@ -245,7 +245,7 @@
 
   /* Post header image sits inside the narrow article column. */
   .post-hero{margin:26px 0 8px;border-radius:14px;overflow:hidden;border:1px solid var(--line);line-height:0}
-  .post-hero img{width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover}
+  .post-hero img{width:100%;height:auto;display:block;aspect-ratio:16/9;object-fit:cover;object-position:center bottom}
 
   /* ── Bright hero photo variant.
      The default .hero__bg::after gradient was tuned against the Bruere render,
