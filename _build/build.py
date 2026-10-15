@@ -656,6 +656,11 @@ def main():
     try:
         import subprocess, os
         guard = os.path.expanduser("~/apex_tooling/leak_guard.py")
+        if not os.path.exists(guard):
+            # The Monday GitHub Action has no leak guard. Saying "clean" there
+            # would be a lie; posts are guarded when they are staged, on the Mac.
+            print("leak guard NOT run (not on this machine); staged posts were guarded at staging")
+            return
         r = subprocess.run(
             [sys.executable, guard, str(ROOT), "--client", "creative_edge"],
             capture_output=True, text=True, timeout=120)
