@@ -355,6 +355,7 @@
     .a01-cta{display:inline-flex}
     .h-copy:has(.a01-media) ~ .h-support .htrust{justify-content:center}
     html.a01-open,html.a01-open body{overflow:hidden !important}
+    html.a01-open .hero__grid{z-index:100000} /* 2026-10-22: .hero__grid (z-index:2) is a stacking context, so without this the sticky header (z 60) painted over the overlay and its close button; a tap on the X dialled the phone link */
     html.a01-open .h-form{position:fixed;inset:0;z-index:100000;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--bg);padding:64px 16px 40px;box-sizing:border-box}
     html.a01-open .h-form .form-card{max-width:560px;margin:0 auto}
     html.a01-open .a01-close{display:flex;position:fixed;top:12px;right:12px;z-index:100001;width:40px;height:40px;border-radius:50%;background:var(--panel);color:#fff;border:1px solid var(--line);font-size:24px;line-height:1;align-items:center;justify-content:center;cursor:pointer;padding:0}
