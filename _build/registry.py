@@ -181,4 +181,12 @@ PAGES = [
     dict(slug="lp-outdoor-living", nav=False, robots="noindex",
          title="Outdoor Living Spaces, Vernon BC | Creative Edge",
          desc="Outdoor kitchens, firepits and lighting designed as one space. Free design consult."),
+
+    # Kelowna pools (John 2026-10-22 after the Blaine meeting): Kelowna city only,
+    # POOL BUILDS ONLY. The Service node's areaServed is Kelowna alone (3rd tuple
+    # item); the business node keeps the full town list like every other page.
+    dict(slug="lp-kelowna-pools", nav=False, robots="noindex",
+         service=("Pool Installation in Kelowna", "Swimming pool installation", ["Kelowna"]),
+         title="Pool Builds in Kelowna BC | Creative Edge Outdoor Living",
+         desc="In-ground pools designed and built for Kelowna homes. Free pool consult and a real budget number on the first visit."),
 ]

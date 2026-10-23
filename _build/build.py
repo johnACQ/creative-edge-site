@@ -171,8 +171,8 @@ OPENING_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 OPENING_HOURS = ("08:00", "17:00")
 
 
-def towns_json():
-    return ",".join('{"@type":"City","name":"%s"}' % t for t in TOWNS)
+def towns_json(towns=None):
+    return ",".join('{"@type":"City","name":"%s"}' % t for t in (towns or TOWNS))
 
 
 def business_schema():
@@ -316,13 +316,16 @@ def schema_block(slug, service, crumbs=None, article=None):
     BreadcrumbList."""
     nodes = [business_schema()]
     if service:
-        name, stype = service
+        # Optional 3rd item = this Service's own areaServed (lp-kelowna-pools,
+        # 2026-10-22). Two-item tuples keep the full TOWNS list, unchanged.
+        name, stype = service[:2]
+        areas = service[2] if len(service) > 2 else None
         nodes.append(
             '{"@type":"Service",'
             f'"@id":"{CANONICAL}/{slug}.html#service",'
             f'"name":"{name}","serviceType":"{stype}",'
             f'"provider":{{"@id":"{CANONICAL}/#business"}},'
-            f'"areaServed":[{towns_json()}],'
+            f'"areaServed":[{towns_json(areas)}],'
             f'"url":"{CANONICAL}/{slug}.html"}}'
         )
     fq = faq_node(slug)
