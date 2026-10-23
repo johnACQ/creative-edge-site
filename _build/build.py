@@ -432,7 +432,7 @@ _CLARITY_INLINE = """
 
 def head(title, desc, robots="index,follow", schema="", canon="", defer_tags=False):
     if defer_tags:
-        h = _head(title, desc, robots, schema, canon)
+        h = _head(title, desc, robots, schema, canon, display_font=True)
         h = h.replace(TRACKING_NOTE, TRACKING_DEFERRED, 1)
         h = h.replace(_CLARITY_INLINE.replace("{{", "{").replace("}}", "}"), "", 1)
         assert TRACKING_DEFERRED in h and "clarity.ms/tag/\"+i" not in h, "deferred tag swap failed"
@@ -440,7 +440,10 @@ def head(title, desc, robots="index,follow", schema="", canon="", defer_tags=Fal
     return _head(title, desc, robots, schema, canon)
 
 
-def _head(title, desc, robots="index,follow", schema="", canon=""):
+def _head(title, desc, robots="index,follow", schema="", canon="", display_font=False):
+    # Self-hosted fonts (2026-10-23): Inter is preloaded everywhere; Bebas Neue only on the
+    # paid LPs, the only pages whose fold uses it (.h-copy:has(.a01-media) h1).
+    display_preload = ('\n<link rel="preload" href="fonts/bebas-neue-latin.woff2" as="font" type="font/woff2" crossorigin>' if display_font else "")
     # Single choke point: every page, whatever the registry says, goes noindex
     # while STAGING is on. See the STAGING comment at the top of this file.
     if STAGING:
@@ -456,9 +459,7 @@ def _head(title, desc, robots="index,follow", schema="", canon=""):
 <link rel="canonical" href="{canon}">
 <link rel="icon" type="image/png" href="img/favicon-64.png">
 {TRACKING_NOTE}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>{display_preload}
 <link rel="stylesheet" href="{asset('css/site.css')}">{schema}
 <script type="text/javascript">
   (function(c,l,a,r,i,t,y){{
