@@ -377,7 +377,70 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=872232952291575&ev=PageView&noscript=1"/></noscript>"""
 
 
-def head(title, desc, robots="index,follow", schema="", canon=""):
+# PAID-LP TRACKING, DEFERRED LIBRARY LOAD (2026-10-22, deliverable 1.5).
+# PSI mobile put the LCP (the hero__bg image) at 5.5-8.9s: ~650KB of gtag x2 +
+# fbevents + signals config downloaded inside the LCP window. Same tags, same ids,
+# same calls as TRACKING_NOTE: the gtag/fbq/clarity STUBS and the queued
+# config + PageView run inline exactly as before; only the three library <script>
+# tags are injected after window load or on the first interaction, whichever is
+# first. The libraries drain their queues on arrival, so PageView, the AW/GA4
+# config and the submit-time conversion/generate_lead calls all still fire.
+# gclid/wbraid/gbraid/fbclid/utm capture lives in js/site.js and never waited on
+# these libraries. Used only for lp-* pages (no nav); every other page keeps
+# TRACKING_NOTE byte for byte.
+TRACKING_DEFERRED = """<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'AW-18360839838');
+gtag('config', 'G-0YEVFG52V0');
+!function(f){if(f.fbq)return;var n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[]}(window);
+fbq('init', '872232952291575');
+fbq('track', 'PageView');
+window.clarity=window.clarity||function(){(window.clarity.q=window.clarity.q||[]).push(arguments)};
+(function(){
+  var done=false;
+  function go(){
+    if(done)return; done=true;
+    ['https://www.googletagmanager.com/gtag/js?id=AW-18360839838',
+     'https://connect.facebook.net/en_US/fbevents.js',
+     'https://www.clarity.ms/tag/yfo36yu36x'].forEach(function(u){
+      var s=document.createElement('script'); s.async=true; s.src=u; document.head.appendChild(s);
+    });
+  }
+  ['pointerdown','keydown','touchstart','scroll'].forEach(function(e){
+    window.addEventListener(e,go,{once:true,passive:true});
+  });
+  if(document.readyState==='complete'){setTimeout(go,0);}
+  else{window.addEventListener('load',function(){setTimeout(go,0);});}
+})();
+</script>
+<noscript><img height="1" width="1" style="display:none" alt=""
+src="https://www.facebook.com/tr?id=872232952291575&ev=PageView&noscript=1"/></noscript>"""
+
+_CLARITY_INLINE = """
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){{
+    c[a]=c[a]||function(){{(c[a].q=c[a].q||[]).push(arguments)}};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  }})(window, document, "clarity", "script", "yfo36yu36x");
+</script>"""
+
+
+def head(title, desc, robots="index,follow", schema="", canon="", defer_tags=False):
+    if defer_tags:
+        h = _head(title, desc, robots, schema, canon)
+        h = h.replace(TRACKING_NOTE, TRACKING_DEFERRED, 1)
+        h = h.replace(_CLARITY_INLINE.replace("{{", "{").replace("}}", "}"), "", 1)
+        assert TRACKING_DEFERRED in h and "clarity.ms/tag/\"+i" not in h, "deferred tag swap failed"
+        return h
+    return _head(title, desc, robots, schema, canon)
+
+
+def _head(title, desc, robots="index,follow", schema="", canon=""):
     # Single choke point: every page, whatever the registry says, goes noindex
     # while STAGING is on. See the STAGING comment at the top of this file.
     if STAGING:
@@ -490,7 +553,8 @@ def build_page(slug, title, desc, robots="index,follow", nav=True, service=None,
     article = blogposting_node(slug, title, desc, post) if post else None
     parts = [
         head(title, desc, robots, schema_block(slug, service, crumbs, article),
-             canon=f"{CANONICAL}/" if slug == "index" else f"{CANONICAL}/{slug}.html"),
+             canon=f"{CANONICAL}/" if slug == "index" else f"{CANONICAL}/{slug}.html",
+             defer_tags=(slug.startswith("lp-") and not nav)),
         header(f"{slug}.html", nav=nav),
         body.rstrip(),
         footer(with_nav=nav),
