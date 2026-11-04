@@ -156,8 +156,12 @@ CANONICAL = "https://creativeedgeoutdoorliving.ca"
 # ⛔ NO aggregateRating here, ever. Both his GBP listings have ZERO reviews —
 # a rating in schema with nothing behind it is fabricated markup and a Google
 # structured-data penalty. It goes in when real reviews exist, not before.
-# ⛔ NO streetAddress: he is a service-area business, address hidden on GBP
-# (N6.4). addressLocality/Region/Country only, plus areaServed.
+# ADDRESS (changed 2026-11-04): Brad asked for the office to show publicly
+# (email 'Address change', Gmail 1a1a4028f894390d). Unit 2 is upstairs in their
+# office building, a boardroom where customers come for meetings, so GBP was
+# switched to CUSTOMER_AND_BUSINESS_LOCATION with storefrontAddress 609
+# Kalamalka Lake Rd, Unit 2 [v 2026-11-04 14:40Z Business Information API PATCH
+# 200]. Schema must match GBP: if the GBP address changes, change it here too.
 # ⛔ There is NO schema.org "LandscapingBusiness" type (schema.org/LandscapingBusiness
 # is a 404, checked 2026-10-07). LocalBusiness + HomeAndConstructionBusiness is the
 # correct, valid pair. Do not "upgrade" it to an invented type.
@@ -187,8 +191,10 @@ def business_schema():
         f'"telephone":"+1{PHONE_HREF.lstrip("+1")}",'
         f'"image":"{CANONICAL}/img/ce-wordmark-1200.png",'
         f'"logo":"{CANONICAL}/img/ce-wordmark-1200.png",'
-        '"address":{"@type":"PostalAddress","addressLocality":"Vernon",'
-        '"addressRegion":"BC","addressCountry":"CA"},'
+        '"address":{"@type":"PostalAddress",'
+        '"streetAddress":"Unit 2, 609 Kalamalka Lake Road","addressLocality":"Vernon",'
+        '"addressRegion":"BC","postalCode":"V1T 7M4","addressCountry":"CA"},'
+        '"geo":{"@type":"GeoCoordinates","latitude":50.2451592,"longitude":-119.2646926},'
         f'"areaServed":[{towns_json()}],'
         '"openingHoursSpecification":[{"@type":"OpeningHoursSpecification",'
         f'"dayOfWeek":[{days}],"opens":"{OPENING_HOURS[0]}","closes":"{OPENING_HOURS[1]}"}}],'
@@ -516,7 +522,7 @@ def footer(with_nav=True):
     return f"""<footer>
   <div class="wrap fl">
     <span>Creative Edge Outdoor Living</span><span>·</span><span>Fully insured</span><span>·</span>
-    <span>Vernon &amp; the North Okanagan</span><span>·</span>
+    <span>Unit 2, 609 Kalamalka Lake Rd, Vernon, BC V1T 7M4</span><span>·</span>
     <span><a href="tel:{PHONE_HREF}">{PHONE_TEXT}</a></span>
   </div>{navrow}
   <div class="wrap fl" style="margin-top:12px">
