@@ -189,8 +189,8 @@ def business_schema():
         '"legalName":"Creative Edge Landscaping Ltd.",'
         f'"url":"{CANONICAL}/",'
         f'"telephone":"+1{PHONE_HREF.lstrip("+1")}",'
-        f'"image":"{CANONICAL}/img/ce-wordmark-1200.png",'
-        f'"logo":"{CANONICAL}/img/ce-wordmark-1200.png",'
+        f'"image":"{CANONICAL}/img/ce-lockup-1200.png",'
+        f'"logo":"{CANONICAL}/img/ce-lockup-1200.png",'
         '"address":{"@type":"PostalAddress",'
         '"streetAddress":"Unit 2, 609 Kalamalka Lake Road","addressLocality":"Vernon",'
         '"addressRegion":"BC","postalCode":"V1T 7M4","addressCountry":"CA"},'
@@ -492,14 +492,18 @@ def header(active, nav=True):
   <nav class="mainnav">
     {links}
   </nav>"""
-    # LOCKUP. img/ce-wordmark.svg = the client's OWN hexagon monogram (extracted
+    # LOCKUP (2026-11-27): img/ce-lockup-white.svg is the client's OFFICIAL logo,
+    # converted 1:1 from the Illustrator PDF Brad sent (text outlined, nothing
+    # redrawn). Regenerate: python3.11 _build/make_official_logo.py
+    # The notes below describe the RETIRED Aug 2026 recreation (ce-wordmark.svg).
+    # OLD LOCKUP. img/ce-wordmark.svg = the client's OWN hexagon monogram (extracted
     # from CEL_logo_Vector.ai with build/extract_monogram.py, geometry untouched,
     # fills recoloured to the new brand) + CREATIVE EDGE / OUTDOOR LIVING set in
     # Oswald 700 and converted to paths. No webfont, no FOUT, renders anywhere.
     # Proportions are calibrated against the vehicle wrap: 0.70% mean deviation.
     # Regenerate: python3 build/extract_monogram.py && python3 build/make_wordmark.py
     return f"""<header>
-  <a href="index.html"><img class="logo" src="{asset('img/ce-wordmark.svg')}" width="1028" height="290" alt="Creative Edge Outdoor Living"></a>{navblock}
+  <a href="index.html"><img class="logo" src="{asset('img/ce-lockup-white.svg')}" width="747" height="155" alt="Creative Edge Outdoor Living"></a>{navblock}
   <a class="tel" href="tel:{PHONE_HREF}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3-8.6A2 2 0 014.1 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.6a2 2 0 01-.5 2.1L8 11.5a16 16 0 006 6l1.1-1.1a2 2 0 012.1-.5c.8.3 1.7.5 2.6.6a2 2 0 011.7 2z"/></svg><span>Call </span>{PHONE_TEXT}</a>
 </header>"""
 

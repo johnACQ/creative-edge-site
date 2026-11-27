@@ -10,6 +10,13 @@
 @font-face{font-family:'Inter Fallback';font-weight:100 599;src:local('Arial'),local('ArialMT');size-adjust:106.63%;ascent-override:90.85%;descent-override:22.62%;line-gap-override:0%;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:'Inter Fallback';font-weight:600 900;src:local('Arial Bold'),local('Arial-BoldMT');size-adjust:101.9%;ascent-override:95.07%;descent-override:23.67%;line-gap-override:0%;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:'Bebas Neue Fallback';src:local('Arial'),local('ArialMT');size-adjust:57.6%;ascent-override:156.26%;descent-override:52.09%;line-gap-override:0%;unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+/* BRAND GREEN UPDATED 2026-11-27 to the client's OFFICIAL logo green #40B93C,
+   read off the vector fills of the logo files Brad sent (Gmail 1a21f0311ac88406,
+   assets/brand/official_2026-11-27). This replaces the Aug 7 wrap-sampled
+   #2BD11F below; the official artwork outranks a photo sample.
+   Contrast re-measured (WCAG 2.1): --brand on --bg 7.61:1 AAA, on --panel 7.02:1
+   AAA, --brand-ink on --brand 7.53:1 AAA, --brand-2 #62D05E on --bg 9.90:1 AAA.
+   White on --brand is 2.55:1 and still FAILS: button labels stay --brand-ink. */
 /* BRAND TOKENS — locked 2026-08-07 to the CREATIVE EDGE / OUTDOOR LIVING
    identity (near-black, white, vivid green).
 
@@ -34,8 +41,8 @@
    old build had white on #18a844 at 3.12:1, which failed AA already. */
   :root{
     --bg:#0c0d10; --panel:#15171c; --panel-2:#111318; --line:#262a31; --muted:#aeb6c2; --ink:#ffffff;
-    --brand:#2bd11f; --brand-2:#60e356; --brand-ink:#0b0f12;
-    --brand-glow:rgba(43,209,31,.32); --maxw:1120px;
+    --brand:#40b93c; --brand-2:#62d05e; --brand-ink:#0b0f12;
+    --brand-glow:rgba(64,185,60,.32); --maxw:1120px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -86,7 +93,7 @@
   .h-form{grid-area:form}
   .h-support{grid-area:support;align-self:start}
   .eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--brand-2);font-weight:600;margin-bottom:18px;border:1px solid var(--line);background:rgba(43,209,31,.1);padding:6px 13px;border-radius:999px}
+    color:var(--brand-2);font-weight:600;margin-bottom:18px;border:1px solid var(--line);background:rgba(64,185,60,.1);padding:6px 13px;border-radius:999px}
   .eyebrow .pip{width:6px;height:6px;border-radius:50%;background:var(--brand)}
   h1{font-weight:800;font-size:clamp(30px,3.7vw,44px);line-height:1.08;letter-spacing:-.022em;max-width:19ch;
     text-shadow:0 2px 24px rgba(0,0,0,.55)}
@@ -124,7 +131,7 @@
   .fc-micro{margin-top:12px;font-size:11.5px;color:var(--muted);text-align:center}
   .fc-done{display:none;text-align:center;padding:20px 6px}
   .fc-done.on{display:block}
-  .fc-done .ok{width:52px;height:52px;border-radius:50%;background:rgba(43,209,31,.14);color:var(--brand-2);display:grid;place-items:center;margin:0 auto 14px}
+  .fc-done .ok{width:52px;height:52px;border-radius:50%;background:rgba(64,185,60,.14);color:var(--brand-2);display:grid;place-items:center;margin:0 auto 14px}
 
   /* SECTIONS */
   section.band{padding:clamp(54px,8vh,88px) 0;border-top:1px solid var(--line)}
@@ -144,7 +151,7 @@
   .pains{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:920px}
   .pain{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 17px;color:#d5dbe4;font-size:15px}
   .pain .pi{flex:0 0 auto;width:22px;height:22px;border-radius:7px;background:rgba(255,90,74,.14);color:#ff7a6b;display:grid;place-items:center;font-weight:700;font-size:13px;margin-top:1px}
-  .callout{margin-top:26px;background:rgba(43,209,31,.08);border:1px solid rgba(43,209,31,.3);border-radius:14px;padding:20px 22px;max-width:920px;font-size:16.5px;color:#e8edf3}
+  .callout{margin-top:26px;background:rgba(64,185,60,.08);border:1px solid rgba(64,185,60,.3);border-radius:14px;padding:20px 22px;max-width:920px;font-size:16.5px;color:#e8edf3}
   .steps{margin-top:38px;display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
   .step .n{font-size:30px;color:var(--brand);font-weight:800}
   .step h4{font-size:17px;margin:10px 0 7px;font-weight:700}
@@ -176,7 +183,7 @@
   .faq p{color:var(--muted);font-size:15px;margin-top:12px}
   .cta-btn{display:inline-flex;align-items:center;gap:10px;background:var(--brand);color:var(--brand-ink);font-weight:800;font-size:17px;padding:16px 28px;border-radius:12px;box-shadow:0 14px 40px -8px var(--brand-glow);transition:.2s}
   .cta-btn:hover{transform:translateY(-2px)}
-  .final{text-align:center;background:radial-gradient(90% 120% at 50% 0%,rgba(43,209,31,.1),transparent 60%),var(--panel-2)}
+  .final{text-align:center;background:radial-gradient(90% 120% at 50% 0%,rgba(64,185,60,.1),transparent 60%),var(--panel-2)}
   .final h2{margin:0 auto;max-width:18ch}
   footer{border-top:1px solid var(--line);padding:30px 0;color:var(--muted);font-size:13px;text-align:center}
   footer a{color:var(--brand-2);font-weight:600}
@@ -334,7 +341,7 @@
   /* ── Accent callout for the disqualifying / damaging-admission block.
      It should read as deliberate honesty, not as body copy people skim. ── */
   .callout{border-left:3px solid var(--brand);background:
-    linear-gradient(90deg,rgba(43,209,31,.09),rgba(43,209,31,0) 62%);
+    linear-gradient(90deg,rgba(64,185,60,.09),rgba(64,185,60,0) 62%);
     border-radius:0 14px 14px 0;padding:26px 26px 24px;margin-top:26px}
   .callout p{color:#dbe2ea}
   .callout p + p{margin-top:14px}
@@ -353,7 +360,7 @@
      No DOM move: form.form-card, field names, step ids and js/site.js are untouched. ===== */
   .h-copy:has(.a01-media) h1{font-family:'Bebas Neue','Bebas Neue Fallback',Impact,'Arial Narrow',sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.012em;line-height:.98;font-size:clamp(38px,4.4vw,60px);max-width:none}
   .h-copy .sub{margin-top:14px}
-  .eyebrow.a01-pill{display:inline-flex;margin:14px 0 14px;padding:10px 16px;border:1.5px solid var(--brand);border-radius:10px;color:#fff;background:rgba(43,209,31,.08);font-size:11px;letter-spacing:.16em;white-space:nowrap}
+  .eyebrow.a01-pill{display:inline-flex;margin:14px 0 14px;padding:10px 16px;border:1.5px solid var(--brand);border-radius:10px;color:#fff;background:rgba(64,185,60,.08);font-size:11px;letter-spacing:.16em;white-space:nowrap}
   .a01-media{position:relative;aspect-ratio:16/9;border:3px solid var(--brand);border-radius:12px;overflow:hidden;background:#000;box-shadow:0 8px 32px rgba(0,0,0,.45);margin:0 0 14px;max-width:640px}
   .a01-media img,.a01-media video{width:100%;height:100%;object-fit:cover;object-position:center 70%;display:block}
   .a01-cap{position:absolute;left:6%;right:6%;bottom:9%;text-align:center;color:#fff;font-weight:800;font-size:14px;line-height:1.25;text-shadow:0 2px 4px rgba(0,0,0,.95),0 0 9px rgba(0,0,0,.9);pointer-events:none}
