@@ -15,8 +15,11 @@ Nothing is redrawn, re-typeset or recoloured.
 SUPERSEDES make_wordmark.py + extract_monogram.py (our Aug 2026 recreation:
 real hexagon + Oswald all-caps text). Those are kept for history only.
 
-OFFICIAL COLOURS (read off the vector fills, not sampled from photos):
-  green  rgb(25%, 72.549%, 23.526%) = #40B93C
+OFFICIAL COLOURS. The PDFs are CMYK; poppler converts the green to
+rgb(25%, 72.549%, 23.526%) = #40B93C and MuPDF to #38B449. The designer's own
+RGB export (CreativeEdgeOutdoorLiving_Logo_Black+Green.png) uses #39B54A, so
+that is the official RGB value and every output is forced to it:
+  green  #39B54A
   black  rgb(13.73%, 12.16%, 12.55%) = #231F20
   white  #FFFFFF
 
@@ -56,13 +59,24 @@ IMG = SITE / "img"
 GROUND = (12, 13, 16, 255)  # --bg #0c0d10
 
 FILL_MAP = {
-    "rgb(25%, 72.549438%, 23.526001%)": "#40B93C",
+    "rgb(25%, 72.549438%, 23.526001%)": "#39B54A",  # designer RGB export, see below
     "rgb(13.729858%, 12.159729%, 12.548828%)": "#231F20",
     "rgb(100%, 100%, 100%)": "#FFFFFF",
 }
 
 
-def pdf_to_svg(pdf: Path, out: Path) -> None:
+_TWINS = {}
+
+
+def svg_twin(pdf: Path) -> Path:
+    if pdf not in _TWINS:
+        out = Path(tempfile.mkdtemp()) / (pdf.stem + ".svg")
+        pdf_to_svg(pdf, out, tighten=False)
+        _TWINS[pdf] = out
+    return _TWINS[pdf]
+
+
+def pdf_to_svg(pdf: Path, out: Path, tighten: bool = True) -> None:
     with tempfile.TemporaryDirectory() as td:
         tmp = Path(td) / "x.svg"
         subprocess.run(["pdftocairo", "-svg", str(pdf), str(tmp)], check=True)
@@ -71,8 +85,12 @@ def pdf_to_svg(pdf: Path, out: Path) -> None:
         svg = svg.replace(k, v)
     left = set(re.findall(r"rgb\([^)]*\)", svg))
     assert not left, f"unmapped colours in {pdf.name}: {left}"
-    r = content_rect(pdf)
-    svg = re.sub(r'viewBox="[^"]+"', f'viewBox="{r.x0:.3f} {r.y0:.3f} {r.width:.3f} {r.height:.3f}"', svg, count=1)
+    if tighten:
+        r = content_rect(pdf)
+        svg = re.sub(r'viewBox="[^"]+"', f'viewBox="{r.x0:.3f} {r.y0:.3f} {r.width:.3f} {r.height:.3f}"', svg, count=1)
+    if not tighten:
+        out.write_text(svg)
+        return
     # Let CSS size it: drop the pt width/height, keep the viewBox.
     svg = re.sub(r'(<svg[^>]*?) width="[^"]+" height="[^"]+"', r"\1", svg, count=1)
     svg = svg.replace("<svg ", '<svg role="img" aria-label="Creative Edge Outdoor Living" ', 1)
@@ -80,7 +98,9 @@ def pdf_to_svg(pdf: Path, out: Path) -> None:
 
 
 def render(pdf: Path, width: int, clip=None) -> Image.Image:
-    doc = fitz.open(pdf)
+    """Rasterise the hex-fixed SVG twin of `pdf` (same artboard, same geometry),
+    so every PNG carries exactly the official #39B54A, not a CMYK conversion."""
+    doc = fitz.open(svg_twin(pdf))
     page = doc[0]
     rect = clip or page.rect
     zoom = width / rect.width
